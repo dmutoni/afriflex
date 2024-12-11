@@ -90,9 +90,7 @@ class _AfriflexDropdownState extends State<AfriflexDropdown> {
                         const SizedBox(width: Dimens.marginSmall),
                         Text(
                           item.label,
-                          style: const TextStyle(
-                            fontSize: Dimens.marginTwelve,
-                          ),
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
                       ],
                     ),
@@ -131,6 +129,7 @@ class _AfriflexDropdownState extends State<AfriflexDropdown> {
           ),
           Text(
             _selectedItem?.value ?? '',
+            style: Theme.of(context).textTheme.displaySmall,
           ),
           const Icon(
             Icons.keyboard_arrow_down_rounded,

@@ -1,3 +1,4 @@
+import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/screens/onboarding_tontine_carousel.dart';
 
@@ -5,12 +6,11 @@ import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/afriflex_dropdown.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../values/colors.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  static const String routeName = '/';
-
   const OnboardingScreen({super.key});
 
   @override
@@ -82,8 +82,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 70),
             AfriflexButton(
               title: 'GET STARTED',
-              onTap: () {},
-              variant: AppButtonVariant.light,
+              onTap: () {
+                context.pushNamed(AfriflexRoutes.signupRoute);
+              },
+              variant: AfriflexButtonVariant.light,
               isEnabled: true,
               isLoading: false,
               isVisible: true,

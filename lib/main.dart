@@ -23,7 +23,7 @@ class _AfriflexAppState extends ConsumerState<AfriflexApp> {
 
     return MaterialApp.router(
       title: 'AfriFlex App',
-      theme: getAppTheme(context: context, isDarkMode: true),
+      theme: getAppTheme(context: context, isDarkMode: false),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

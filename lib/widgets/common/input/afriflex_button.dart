@@ -8,7 +8,7 @@ class AfriflexButton extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final VoidCallback? disabledOnTap;
-  final AppButtonVariant variant;
+  final AfriflexButtonVariant variant;
   final bool isLoading;
   final bool isEnabled;
   final bool isVisible;
@@ -25,7 +25,7 @@ class AfriflexButton extends StatelessWidget {
     required this.title,
     required this.onTap,
     this.disabledOnTap,
-    this.variant = AppButtonVariant.dark,
+    this.variant = AfriflexButtonVariant.dark,
     this.isLoading = false,
     this.isEnabled = true,
     this.isVisible = true,
@@ -52,10 +52,7 @@ class AfriflexButton extends StatelessWidget {
       duration: Durations.short2,
       decoration: BoxDecoration(
         gradient: backgroundColor,
-        border: Border.all(
-          color: variant.borderColor,
-          width: 1.0,
-        ),
+        border: variant.border,
         borderRadius: BorderRadius.circular(
           Dimens.radiusDefault,
         ),
@@ -99,7 +96,10 @@ class AfriflexButton extends StatelessWidget {
   }
 
   Widget _buildContent(
-          Color backgroundColor, Color primaryColor, BuildContext context) =>
+    Color backgroundColor,
+    Color primaryColor,
+    BuildContext context,
+  ) =>
       isLoading
           ? AspectRatio(
               aspectRatio: 1.0,
@@ -124,7 +124,9 @@ class AfriflexButton extends StatelessWidget {
                   Text(
                     title,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: primaryColor,
+                        ),
                   ),
                   if (actionIcon != null) actionIcon ?? const SizedBox.shrink(),
                 ],

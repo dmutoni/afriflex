@@ -32,17 +32,16 @@ ThemeData getAppTheme({
         letterSpacing: 0.6,
       ),
       bodyLarge: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: ThemeColors.whiteColor,
+        fontSize: 12,
+        fontWeight: FontWeight.w200,
+        color: ThemeColors.blackColor,
         height: 1.5,
-        letterSpacing: 0.6,
       ),
       bodyMedium: const TextStyle(
         fontFamily: poppins,
-        fontSize: Dimens.marginDefault,
+        fontSize: Dimens.marginTwelve,
         fontWeight: FontWeight.w300,
-        color: ThemeColors.blackColor,
+        color: ThemeColors.grayDark,
       ),
       labelSmall: const TextStyle(
         fontSize: 12,
@@ -55,6 +54,13 @@ ThemeData getAppTheme({
         fontSize: Dimens.marginTwelve,
         fontWeight: FontWeight.w300,
         color: ThemeColors.grayDark,
+      ),
+      displaySmall: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w300,
+        color: ThemeColors.blackColor,
+        height: 1.5,
+        letterSpacing: 0.6,
       ),
     ),
   );

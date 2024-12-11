@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 abstract class ThemeColors {
-  static const whiteColor = Color(0xFFFFFFFF);
-  static const blackColor = Color(0xFF000000);
-  static const orangeColor = Color(0xFFF59421);
-  static const grayLight = Color(0xFFE5E5E5);
-  static const grayDark = Color(0xFFA1A1A1);
+  static const Color whiteColor = Color(0xFFFFFFFF);
+  static const Color blackColor = Color(0xFF000000);
+  static const Color orangeColor = Color(0xFFF59421);
+  static const Color grayLight = Color(0xFFE5E5E5);
+  static const Color grayDark = Color(0xFFA1A1A1);
+  static const Color lightGray2 = Color(0xFF727E96);
+  static const Color red = Color(0xFFE53935);
+  static const Color darkRed = Color(0xFFe53935);
+  static const Color darkGold = Color(0xFFD78700);
 
   static const primaryColor = LinearGradient(
     begin: Alignment.centerLeft,
@@ -13,6 +17,26 @@ abstract class ThemeColors {
     colors: [
       Color(0xFF000000), // Black color
       Color(0xFFF59421), // Orange color
+    ],
+  );
+
+  static const orangeColorGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      Color(0xFFF59421),
+
+      /// Black color
+      Color(0xFFF59421), // Orange color
+    ],
+  );
+
+  static const whiteColorGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      Color(0xFFFFFFFF),
+      Color(0xFFFFFFFF), // Orange color
     ],
   );
 }
