@@ -1,5 +1,4 @@
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
-import 'package:afriflex/theme/styles.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/values/duration_values.dart';
 import 'package:afriflex/widgets/app_inkwell.dart';

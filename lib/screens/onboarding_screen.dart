@@ -4,19 +4,20 @@ import 'package:afriflex/screens/onboarding_tontine_carousel.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/afriflex_dropdown.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../values/colors.dart';
 
-class OnboardingScreen1 extends StatefulWidget {
-  const OnboardingScreen1({super.key});
+class OnboardingScreen extends StatefulWidget {
+  static const String routeName = '/';
+
+  const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen1> createState() => _OnboardingScreen1State();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreen1State extends State<OnboardingScreen1> {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final items = [
