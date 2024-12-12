@@ -18,6 +18,7 @@ abstract class Dimens {
   static const marginLarge = 32.0;
   static const marginXLarge = 48.0;
   static const marginForty = 40.0;
+  static const marginFortySix = 46.0;
   static const marginFifty = 50.0;
   static const marginSeventy = 70.0;
 
@@ -35,4 +36,6 @@ abstract class Dimens {
   static const dropdownHeight = 50.0;
   static const dropdownWidth = 170.0;
   static const dropdwonItemHeight = 90.0;
+
+  static const otpExpiryTimeInSeconds = 300;
 }

@@ -10,6 +10,7 @@ abstract class ThemeColors {
   static const Color red = Color(0xFFE53935);
   static const Color darkRed = Color(0xFFe53935);
   static const Color darkGold = Color(0xFFD78700);
+  static const Color green = Color(0xFF08B784);
 
   static const primaryColor = LinearGradient(
     begin: Alignment.centerLeft,

@@ -1,4 +1,5 @@
 import 'package:afriflex/values/colors.dart';
+import 'package:afriflex/values/dimens.dart';
 import 'package:flutter/material.dart';
 
 abstract class Styles {
@@ -33,4 +34,20 @@ abstract class Styles {
     fontWeight: FontWeight.w400,
     color: ThemeColors.blackColor,
   );
+
+  static BoxDecoration get pinPutDecoration => BoxDecoration(
+        borderRadius: BorderRadius.circular(Dimens.radiusMedium),
+        color: ThemeColors.whiteColor,
+        border: Border.all(
+          color: ThemeColors.grayLight,
+        ),
+      );
+
+  static BoxDecoration get selectedPinPutDecoration => BoxDecoration(
+        borderRadius: BorderRadius.circular(Dimens.radiusMedium),
+        color: ThemeColors.whiteColor,
+        border: Border.all(
+          color: ThemeColors.orangeColor,
+        ),
+      );
 }

@@ -62,6 +62,13 @@ ThemeData getAppTheme({
         height: 1.5,
         letterSpacing: 0.6,
       ),
+      displayMedium: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w300,
+        color: ThemeColors.blackColor,
+        height: 1.5,
+        letterSpacing: 0.6,
+      ),
     ),
   );
 }

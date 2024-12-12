@@ -1,6 +1,7 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/screens/error_screen.dart';
 import 'package:afriflex/screens/onboarding_screen.dart';
+import 'package:afriflex/screens/otp_screen.dart';
 import 'package:afriflex/screens/signup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,6 +30,11 @@ List<GoRoute> buildRoutes() {
       name: AfriflexRoutes.signupRoute,
       path: AfriflexRoutes.signupRoute,
       builder: (context, state) => const SignupScreen(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.otpCodeRoute,
+      path: AfriflexRoutes.otpCodeRoute,
+      builder: (context, state) => const OtpScreen(),
     )
   ];
 }
