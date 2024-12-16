@@ -16,8 +16,8 @@ abstract class ThemeColors {
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [
-      Color(0xFF000000), // Black color
-      Color(0xFFF59421), // Orange color
+      Color(0xFF000000),
+      Color(0xFFF59421),
     ],
   );
 
@@ -26,9 +26,7 @@ abstract class ThemeColors {
     end: Alignment.centerRight,
     colors: [
       Color(0xFFF59421),
-
-      /// Black color
-      Color(0xFFF59421), // Orange color
+      Color(0xFFF59421),
     ],
   );
 
@@ -37,7 +35,7 @@ abstract class ThemeColors {
     end: Alignment.centerRight,
     colors: [
       Color(0xFFFFFFFF),
-      Color(0xFFFFFFFF), // Orange color
+      Color(0xFFFFFFFF),
     ],
   );
 }

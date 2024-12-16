@@ -30,7 +30,7 @@ abstract class Dimens {
   static const radiusXLarge = 20.0;
   static const radiusCircular = 100.0;
 
-  static const inputHeight = 54.0;
+  static const inputHeight = 50.0;
   static const searchInputHeight = 40.0;
 
   static const dropdownHeight = 50.0;

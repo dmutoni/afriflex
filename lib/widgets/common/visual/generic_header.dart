@@ -2,7 +2,6 @@ import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/duration_values.dart';
 import 'package:afriflex/widgets/common/input/protected_icon_button.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 abstract class _Constants {
   static const leadingWidth = 48.0;

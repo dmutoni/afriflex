@@ -74,13 +74,13 @@ extension AfriflexInputVariantValues on AfriflexInputVariant {
   Color get selectedBorderColor {
     switch (this) {
       case AfriflexInputVariant.dark:
-        return ThemeColors.grayLight;
+        return ThemeColors.orangeColor;
       case AfriflexInputVariant.light:
-        return ThemeColors.grayLight;
+        return ThemeColors.orangeColor;
       case AfriflexInputVariant.clear:
-        return ThemeColors.grayLight;
+        return ThemeColors.orangeColor;
       case AfriflexInputVariant.search:
-        return ThemeColors.grayLight;
+        return ThemeColors.orangeColor;
     }
   }
 

@@ -42,7 +42,7 @@ class ProtectedIconButton {
     bool? awaitOnTap, // this will error if onTap is not asyncronous
   }) {
     // workaround for non const default value
-    int _tapProtectionMilliseconds =
+    int tapProtectionMilliseconds0 =
         tapProtectionMilliseconds ?? _defaultProtectionDuration;
 
     IconButton? widget;
@@ -62,7 +62,7 @@ class ProtectedIconButton {
       disabledColor: disabledColor,
       onPressed: enableTapProtection
           ? () => TapProtectionHelper.protect(() => onPressed?.call(),
-              delayDurationMilliseconds: _tapProtectionMilliseconds,
+              delayDurationMilliseconds: tapProtectionMilliseconds0,
               asyncWidget:
                   awaitOnTap != null && awaitOnTap == true ? widget : null)
           : onPressed,

@@ -80,21 +80,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 20),
             const OnboardingTontineCarousel(),
             const SizedBox(height: 70),
-            AfriflexButton(
-              title: 'GET STARTED',
-              onTap: () {
-                context.pushNamed(AfriflexRoutes.signupRoute);
-              },
-              variant: AfriflexButtonVariant.light,
-              isEnabled: true,
-              isLoading: false,
-              isVisible: true,
-              height: Dimens.inputHeight,
-              width: 290,
-              actionIcon: const Icon(
-                Icons.arrow_forward,
-                color: ThemeColors.whiteColor,
-                size: 20,
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimens.marginDefault,
+              ),
+              child: AfriflexButton(
+                title: 'GET STARTED',
+                onTap: () {
+                  context.pushNamed(AfriflexRoutes.loginRoute);
+                },
+                variant: AfriflexButtonVariant.light,
+                isEnabled: true,
+                isLoading: false,
+                isVisible: true,
+                height: Dimens.inputHeight,
+                actionIcon: const Icon(
+                  Icons.arrow_forward,
+                  color: ThemeColors.whiteColor,
+                  size: 20,
+                ),
               ),
             ),
           ],

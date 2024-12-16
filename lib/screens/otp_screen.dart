@@ -1,3 +1,4 @@
+import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/theme/styles.dart';
 import 'package:afriflex/values/colors.dart';
@@ -144,6 +145,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                   _isSubmitting = true;
                 });
               }
+              context.pushNamed(AfriflexRoutes.loginRoute);
             } on Exception catch (e) {
               if (kDebugMode) {
                 print(e);
