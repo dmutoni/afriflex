@@ -89,7 +89,7 @@ class _AfriflexDropdownState extends State<AfriflexDropdown> {
                         item.icon,
                         const SizedBox(width: Dimens.marginSmall),
                         Text(
-                          item.label,
+                          '${item.label} ',
                           style: Theme.of(context).textTheme.displaySmall,
                         ),
                       ],

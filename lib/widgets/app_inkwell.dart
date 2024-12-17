@@ -12,7 +12,7 @@ class AppProtectedInkWell {
   ///
   ///
   /// See the [InkWell] class for more details
-  static InkWell Create({
+  static InkWell create({
     Key? key,
     Widget? child,
     GestureTapCallback? onTap,

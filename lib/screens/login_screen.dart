@@ -1,4 +1,5 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/helpers/validation_helper.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
@@ -8,7 +9,6 @@ import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intersperse/intersperse.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -18,10 +18,9 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -30,7 +29,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void dispose() {
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -65,6 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               AfriflexTextInput(
+                controller: _emailController,
                 label: 'Email address',
                 isRequired: true,
                 validateOnInput: true,
@@ -79,6 +78,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 },
               ),
               AfriflexTextInput(
+                controller: _passwordController,
                 label: 'Password',
                 isRequired: true,
                 obscureText: _isShowingPassword,
@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                 ),
                 validator: (value) {
-                  if (value!.isEmpty) {
+                  if (value == null) {
                     return 'Password is required';
                   } else if (value.length < 6) {
                     return 'Password must be at least 6 characters';
@@ -114,25 +114,53 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               AfriflexButton(
-                title: 'START',
-                isEnabled: _formKey.currentState?.validate() ?? false,
+                title: 'LOGIN',
+                // isEnabled: _formKey.currentState?.validate() ?? false,
                 onTap: () async {
-                  // if (_formKey.currentState?.validate() ?? false) {
-                  //   try {
-                  //     context.pushNamed(
-                  //       AfriflexRoutes.homeRoute,
-                  //     );
-                  //   } catch (e) {
-                  //     print(e);
-                  //   }
-                  // }
+                  _formKey.currentState?.validate();
+                  if (_formKey.currentState?.validate() ?? false) {
+                    try {
+                      context.pushNamed(
+                        AfriflexRoutes.homeRoute,
+                      );
+                    } catch (e) {
+                      print(e);
+                    }
+                  }
+                },
+              ),
+              Row(
+                spacing: 14,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: const Divider(
+                      color: ThemeColors.grayLight,
+                    ),
+                  ),
+                  const Text('OR'),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: const Divider(
+                      color: ThemeColors.grayLight,
+                    ),
+                  ),
+                ],
+              ),
+              AfriflexButton(
+                title: 'SIGN UP',
+                variant: AfriflexButtonVariant.clear,
+                onTap: () {
+                  context.pushNamed(
+                    AfriflexRoutes.signupRoute,
+                  );
                 },
               ),
             ],
           ),
         ),
       ),
-      actions: [],
+      actions: const [],
     );
   }
 }

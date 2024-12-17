@@ -59,7 +59,7 @@ class AfriflexButton extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        child: AppProtectedInkWell.Create(
+        child: AppProtectedInkWell.create(
           onTap: () async {
             if (isLoading) return;
             await Future.delayed(DurationValues.onTapDelay);

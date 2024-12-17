@@ -48,7 +48,8 @@ extension AfriflexInputVariantValues on AfriflexInputVariant {
   Color get disabledTextColor {
     switch (this) {
       case AfriflexInputVariant.dark:
-        return ThemeColors.grayLight.withOpacity(0.8);
+        return ThemeColors.grayLight
+            .withValues(green: 0.5, blue: 0.5, red: 0.5);
       case AfriflexInputVariant.light:
         return ThemeColors.grayLight;
       case AfriflexInputVariant.clear:
