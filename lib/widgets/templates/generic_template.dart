@@ -11,6 +11,7 @@ class GenericTemplate extends ConsumerWidget {
   final Color backgroundColor;
   final bool isLoading;
   final bool isScrollable;
+  final bool showDrawer;
 
   const GenericTemplate({
     super.key,
@@ -20,6 +21,7 @@ class GenericTemplate extends ConsumerWidget {
     this.actions,
     this.isLoading = false,
     this.isScrollable = true,
+    this.showDrawer = false,
   });
 
   @override
@@ -77,6 +79,7 @@ class GenericTemplate extends ConsumerWidget {
           ],
         ),
       ),
+      drawer: showDrawer ? const Drawer() : null,
     );
   }
 

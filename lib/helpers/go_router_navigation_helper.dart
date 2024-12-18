@@ -1,5 +1,6 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/screens/error_screen.dart';
+import 'package:afriflex/screens/home_screen.dart';
 import 'package:afriflex/screens/login_screen.dart';
 import 'package:afriflex/screens/onboarding_screen.dart';
 import 'package:afriflex/screens/otp_screen.dart';
@@ -47,6 +48,11 @@ List<GoRoute> buildRoutes() {
       name: AfriflexRoutes.otpCodeRoute,
       path: AfriflexRoutes.otpCodeRoute,
       builder: (context, state) => const OtpScreen(),
-    )
+    ),
+    GoRoute(
+      name: AfriflexRoutes.homeRoute,
+      path: AfriflexRoutes.homeRoute,
+      builder: (context, state) => const HomeScreen(),
+    ),
   ];
 }
