@@ -35,6 +35,13 @@ abstract class Styles {
     color: ThemeColors.blackColor,
   );
 
+  static const TextStyle drawerTextStyle = TextStyle(
+    fontFamily: _poppins,
+    fontSize: 18.0,
+    fontWeight: FontWeight.w600,
+    color: ThemeColors.whiteColor,
+  );
+
   static BoxDecoration get pinPutDecoration => BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radiusMedium),
         color: ThemeColors.whiteColor,

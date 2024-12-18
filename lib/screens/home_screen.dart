@@ -17,6 +17,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     return GenericTemplate(
       title: '',
+      actionsContentOverride: Image.asset(
+        ''
+        'assets/images/home_page/profile.png',
+      ),
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dimens.marginBig),
         child: Column(

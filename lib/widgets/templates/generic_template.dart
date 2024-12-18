@@ -1,3 +1,5 @@
+import 'package:afriflex/theme/styles.dart';
+import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/values/duration_values.dart';
 import 'package:afriflex/widgets/common/visual/generic_header.dart';
@@ -12,6 +14,7 @@ class GenericTemplate extends ConsumerWidget {
   final bool isLoading;
   final bool isScrollable;
   final bool showDrawer;
+  final Widget? actionsContentOverride;
 
   const GenericTemplate({
     super.key,
@@ -22,6 +25,7 @@ class GenericTemplate extends ConsumerWidget {
     this.isLoading = false,
     this.isScrollable = true,
     this.showDrawer = false,
+    this.actionsContentOverride,
   });
 
   @override
@@ -35,10 +39,22 @@ class GenericTemplate extends ConsumerWidget {
       child: innerContent,
     );
 
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: scaffoldKey,
       extendBodyBehindAppBar: true,
       appBar: GenericHeader(
         titleText: title,
+        leadingContentOverride: showDrawer
+            ? IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  scaffoldKey.currentState?.openDrawer();
+                },
+              )
+            : null,
+        actionsContentOverride: actionsContentOverride,
       ),
       backgroundColor: backgroundColor,
       body: SafeArea(
@@ -79,7 +95,111 @@ class GenericTemplate extends ConsumerWidget {
           ],
         ),
       ),
-      drawer: showDrawer ? const Drawer() : null,
+      drawer: showDrawer
+          ? ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(70),
+                bottomRight: Radius.circular(70),
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                decoration: const BoxDecoration(
+                  color: ThemeColors.whiteColor,
+                  gradient: ThemeColors.drawerGradient,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.marginDefault,
+                  vertical: 60,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 20,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        color: ThemeColors.whiteColor,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        scaffoldKey.currentState?.openEndDrawer();
+                      },
+                    ),
+                    const Row(
+                      spacing: 12,
+                      children: [
+                        Icon(
+                          Icons.home_outlined,
+                          color: ThemeColors.whiteColor,
+                          size: 30,
+                        ),
+                        Text('Home', style: Styles.drawerTextStyle),
+                      ],
+                    ),
+                    const Row(
+                      spacing: 12,
+                      children: [
+                        Icon(
+                          Icons.real_estate_agent_sharp,
+                          color: ThemeColors.whiteColor,
+                          size: 30,
+                        ),
+                        Text('Digital tontine', style: Styles.drawerTextStyle),
+                      ],
+                    ),
+                    const Row(
+                      spacing: 12,
+                      children: [
+                        Icon(
+                          Icons.area_chart_outlined,
+                          color: ThemeColors.whiteColor,
+                          size: 30,
+                        ),
+                        Text('Wallet', style: Styles.drawerTextStyle),
+                      ],
+                    ),
+                    const Row(
+                      spacing: 12,
+                      children: [
+                        Icon(
+                          Icons.wallet,
+                          color: ThemeColors.whiteColor,
+                          size: 30,
+                        ),
+                        Text('Send Money', style: Styles.drawerTextStyle),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 300,
+                    ),
+                    const Row(
+                      spacing: 12,
+                      children: [
+                        Icon(
+                          Icons.support_agent_outlined,
+                          color: ThemeColors.whiteColor,
+                          size: 30,
+                        ),
+                        Text('Customer Support', style: Styles.drawerTextStyle),
+                      ],
+                    ),
+                    const Row(
+                      spacing: 12,
+                      children: [
+                        Icon(
+                          Icons.logout_outlined,
+                          color: ThemeColors.whiteColor,
+                          size: 30,
+                        ),
+                        Text('Logout', style: Styles.drawerTextStyle),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : null,
     );
   }
 
