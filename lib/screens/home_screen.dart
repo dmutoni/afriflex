@@ -16,6 +16,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return GenericTemplate(
+      isScrollable: true,
       title: '',
       actionsContentOverride: Image.asset(
         ''
@@ -215,11 +216,228 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ],
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                FeatureItem(
+                    icon: Icons.qr_code,
+                    label: 'Digital Tontine',
+                    color: Colors.orange),
+                FeatureItem(
+                    icon: Icons.send,
+                    label: 'Send Money',
+                    color: Colors.orange),
+                FeatureItem(
+                    icon: Icons.account_balance_wallet,
+                    label: 'Add Money',
+                    color: Colors.orange),
+                FeatureItem(
+                    icon: Icons.more_horiz,
+                    label: 'View more',
+                    color: Colors.grey),
+              ],
+            ),
+            const SectionHeader(title: "Send money"),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                ContactItem(initials: "JM", name: "Jhon"),
+                ContactItem(initials: "AN", name: "Ann"),
+                ContactItem(initials: "MT", name: "Mike"),
+                ContactItem(initials: "MI", name: "Mia"),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Outgoing Transactions
+            const SectionHeader(title: "Outgoing Transactions"),
+            const TransactionItem(
+              title: "Ikimina",
+              type: "Tontine",
+              date: "13 May",
+              amount: "XAF75.67",
+            ),
+            const TransactionItem(
+              title: "Jhon",
+              type: "Transfer",
+              date: "19 May",
+              amount: "XAF15.03",
+            ),
+            const SizedBox(height: 24),
+
+            // Incoming Transactions
+            const SectionHeader(title: "Incoming Transactions"),
+            const TransactionItem(
+              title: "Mia",
+              type: "Transfer",
+              date: "13 May",
+              amount: "XAF75.67",
+            ),
+            const TransactionItem(
+              title: "Jhon",
+              type: "Transfer",
+              date: "19 May",
+              amount: "XAF15.03",
+            ),
           ],
         ),
       ),
       backgroundColor: ThemeColors.whiteColor,
       showDrawer: true,
+    );
+  }
+}
+
+// Section Header Widget
+class SectionHeader extends StatelessWidget {
+  final String title;
+  const SectionHeader({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        const Text(
+          "View all >",
+          style: TextStyle(color: Colors.grey, fontSize: 14),
+        ),
+      ],
+    );
+  }
+}
+
+// Feature Item Widget (Top Menu)
+class FeatureItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  const FeatureItem(
+      {super.key,
+      required this.icon,
+      required this.label,
+      required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: color, size: 32),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// Contact Item Widget
+class ContactItem extends StatelessWidget {
+  final String initials;
+  final String name;
+
+  const ContactItem({super.key, required this.initials, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 28,
+          backgroundColor: Colors.grey.shade300,
+          child: Text(
+            initials,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          name,
+          style: const TextStyle(fontSize: 12, color: Colors.black),
+        ),
+      ],
+    );
+  }
+}
+
+// Transaction Item Widget
+class TransactionItem extends StatelessWidget {
+  final String title;
+  final String type;
+  final String date;
+  final String amount;
+
+  const TransactionItem({
+    super.key,
+    required this.title,
+    required this.type,
+    required this.date,
+    required this.amount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                type,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                date,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                amount,
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
