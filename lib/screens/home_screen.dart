@@ -27,6 +27,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
           children: [
             Text(
               'Hi, Jacques',
@@ -35,7 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     fontWeight: FontWeight.w500,
                   ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
             SizedBox(
               width:
                   double.infinity, // Ensures the Stack takes full screen width
@@ -216,70 +217,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ],
               ),
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 FeatureItem(
-                    icon: Icons.qr_code,
-                    label: 'Digital Tontine',
-                    color: Colors.orange),
+                  icon: Icons.qr_code_scanner_outlined,
+                  label: 'Digital Tontine',
+                  color: Colors.orange,
+                ),
                 FeatureItem(
-                    icon: Icons.send,
-                    label: 'Send Money',
-                    color: Colors.orange),
+                  icon: Icons.send_to_mobile_outlined,
+                  label: 'Send Money',
+                  color: Colors.orange,
+                ),
                 FeatureItem(
-                    icon: Icons.account_balance_wallet,
-                    label: 'Add Money',
-                    color: Colors.orange),
+                  icon: Icons.account_balance_wallet_outlined,
+                  label: 'Add Money',
+                  color: Colors.orange,
+                ),
                 FeatureItem(
-                    icon: Icons.more_horiz,
-                    label: 'View more',
-                    color: Colors.grey),
+                  icon: Icons.keyboard_arrow_down_rounded,
+                  label: 'View more',
+                  color: Colors.grey,
+                  isViewMore: true,
+                ),
               ],
             ),
             const SectionHeader(title: "Send money"),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                ContactItem(initials: "JM", name: "Jhon"),
-                ContactItem(initials: "AN", name: "Ann"),
-                ContactItem(initials: "MT", name: "Mike"),
-                ContactItem(initials: "MI", name: "Mia"),
-              ],
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.11,
+              child: ListView(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                children: const <Widget>[
+                  ContactItem(initials: "JM", name: "Jhon"),
+                  ContactItem(initials: "AN", name: "Ann"),
+                  ContactItem(initials: "MT", name: "Mike"),
+                  ContactItem(initials: "MI", name: "Mia"),
+                  ContactItem(initials: "MI", name: "Mia"),
+                ],
+              ),
             ),
-            const SizedBox(height: 24),
-
-            // Outgoing Transactions
-            const SectionHeader(title: "Outgoing Transactions"),
-            const TransactionItem(
-              title: "Ikimina",
-              type: "Tontine",
-              date: "13 May",
-              amount: "XAF75.67",
-            ),
-            const TransactionItem(
-              title: "Jhon",
-              type: "Transfer",
-              date: "19 May",
-              amount: "XAF15.03",
-            ),
-            const SizedBox(height: 24),
-
-            // Incoming Transactions
-            const SectionHeader(title: "Incoming Transactions"),
-            const TransactionItem(
-              title: "Mia",
-              type: "Transfer",
-              date: "13 May",
-              amount: "XAF75.67",
-            ),
-            const TransactionItem(
-              title: "Jhon",
-              type: "Transfer",
-              date: "19 May",
-              amount: "XAF15.03",
-            ),
+            const TransactionTable(),
           ],
         ),
       ),
@@ -289,7 +268,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-// Section Header Widget
 class SectionHeader extends StatelessWidget {
   final String title;
   const SectionHeader({super.key, required this.title});
@@ -313,69 +291,87 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-// Feature Item Widget (Top Menu)
 class FeatureItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
+  final VoidCallback? onPressed;
+  final bool isViewMore;
 
-  const FeatureItem(
-      {super.key,
-      required this.icon,
-      required this.label,
-      required this.color});
+  const FeatureItem({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.color,
+    this.onPressed,
+    this.isViewMore = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.2,
+      height: MediaQuery.of(context).size.height * 0.11,
+      child: Column(
+        spacing: 8,
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.05,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: isViewMore
+                  ? BorderRadius.circular(Dimens.radiusCircular)
+                  : null,
+              border:
+                  isViewMore ? Border.all(color: Colors.grey.shade300) : null,
+            ),
+            child: Icon(icon, color: color, size: 32),
           ),
-          child: Icon(icon, color: color, size: 32),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w400,
+                ),
+            overflow: TextOverflow.visible,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-// Contact Item Widget
 class ContactItem extends StatelessWidget {
   final String initials;
   final String name;
 
-  const ContactItem({super.key, required this.initials, required this.name});
+  const ContactItem({
+    super.key,
+    required this.initials,
+    required this.name,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 28,
-          backgroundColor: Colors.grey.shade300,
-          child: Text(
-            initials,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.18,
+      height: MediaQuery.of(context).size.height * 0.11,
+      child: Column(
+        spacing: 8,
+        children: [
+          CircleAvatar(
+            radius: 32,
+            backgroundColor: Colors.grey.shade300,
+            child: Text(
+              initials,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          name,
-          style: const TextStyle(fontSize: 12, color: Colors.black),
-        ),
-      ],
+          Text(
+            name,
+            style: const TextStyle(fontSize: 12, color: Colors.black),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -438,6 +434,110 @@ class TransactionItem extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class TransactionTable extends StatelessWidget {
+  const TransactionTable({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
+      children: [
+        SectionHeader(
+          title: 'Outgoing Transactions',
+        ),
+        TransactionSection(
+          columns: ["Receiver", "Type", "Date", "Amount"],
+          rows: [
+            ["Ikimina", "Tontine", "13 May", "XAF75.67"],
+            ["Jhon", "Transfer", "19 May", "XAF15.03"],
+          ],
+        ),
+        SectionHeader(
+          title: 'Incoming Transactions',
+        ),
+        TransactionSection(
+          columns: ["Sender", "Type", "Date", "Amount"],
+          rows: [
+            ["Mia", "Transfer", "13 May", "XAF75.67"],
+            ["Jhon", "Transfer", "19 May", "XAF15.03"],
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class TransactionSection extends StatelessWidget {
+  final List<String> columns;
+  final List<List<String>> rows;
+
+  const TransactionSection({
+    super.key,
+    required this.columns,
+    required this.rows,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (rows.isEmpty)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Text(
+                "No transactions available",
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey,
+                    ),
+              ),
+            ),
+          )
+        else
+          Table(
+            children: [
+              TableRow(
+                children: columns
+                    .map(
+                      (column) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          column,
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontSize: Dimens.marginFourteen,
+                                  ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              ...rows.map(
+                (row) => TableRow(
+                  children: row
+                      .map(
+                        (cell) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            cell,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
