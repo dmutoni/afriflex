@@ -5,6 +5,7 @@ import 'package:afriflex/screens/login_screen.dart';
 import 'package:afriflex/screens/onboarding_screen.dart';
 import 'package:afriflex/screens/otp_screen.dart';
 import 'package:afriflex/screens/email_entry_screen.dart';
+import 'package:afriflex/screens/send_money_screen.dart';
 import 'package:afriflex/screens/signup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,5 +55,10 @@ List<GoRoute> buildRoutes() {
       path: AfriflexRoutes.homeRoute,
       builder: (context, state) => const HomeScreen(),
     ),
+    GoRoute(
+      name: AfriflexRoutes.sendMoneyRoute,
+      path: AfriflexRoutes.sendMoneyRoute,
+      builder: (context, state) => const SendMoneyScreen(),
+    )
   ];
 }

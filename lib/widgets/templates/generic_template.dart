@@ -1,3 +1,4 @@
+import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/theme/styles.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
@@ -5,6 +6,7 @@ import 'package:afriflex/values/duration_values.dart';
 import 'package:afriflex/widgets/common/visual/generic_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class GenericTemplate extends ConsumerWidget {
   final String title;
@@ -159,16 +161,23 @@ class GenericTemplate extends ConsumerWidget {
                         Text('Wallet', style: Styles.drawerTextStyle),
                       ],
                     ),
-                    const Row(
-                      spacing: 12,
-                      children: [
-                        Icon(
-                          Icons.wallet,
-                          color: ThemeColors.whiteColor,
-                          size: 30,
-                        ),
-                        Text('Send Money', style: Styles.drawerTextStyle),
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        context.pushNamed(
+                          AfriflexRoutes.sendMoneyRoute,
+                        );
+                      },
+                      child: const Row(
+                        spacing: 12,
+                        children: [
+                          Icon(
+                            Icons.wallet,
+                            color: ThemeColors.whiteColor,
+                            size: 30,
+                          ),
+                          Text('Send Money', style: Styles.drawerTextStyle),
+                        ],
+                      ),
                     ),
                     const SizedBox(
                       height: 300,

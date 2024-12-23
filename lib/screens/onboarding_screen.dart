@@ -18,6 +18,19 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final TextEditingController phoneNumberController = TextEditingController();
+
+  @override
+  void dispose() {
+    phoneNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final items = [
@@ -51,11 +64,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 300),
               child: AfriflexDropdown(
+                isLanguagePicker: true,
                 items: items,
-                selectedItem: items.first,
+                // selectedItem: items.first,
                 onChanged: (selectedItem) {
                   print('Selected: ${selectedItem.label}');
                 },
+                controller: phoneNumberController,
               ),
             ),
             const SizedBox(height: 40),
