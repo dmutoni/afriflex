@@ -45,6 +45,7 @@ class _SendMoneyScreenState extends ConsumerState<SendMoneyScreen> {
           horizontal: Dimens.marginDefault,
         ),
         child: Form(
+          key: _formKey,
           child: Column(
             spacing: 10,
             children: [
@@ -58,6 +59,7 @@ class _SendMoneyScreenState extends ConsumerState<SendMoneyScreen> {
                   }
                   return null;
                 },
+                keyboardType: TextInputType.phone,
               ),
               AfriflexDropdown(
                 controller: recipientModeController,
@@ -92,23 +94,23 @@ class _SendMoneyScreenState extends ConsumerState<SendMoneyScreen> {
               AfriflexButton(
                 title: 'Confirm',
                 onTap: () async {
-                  _formKey.currentState?.validate();
-                  if (_formKey.currentState?.validate() ?? false) {
-                    try {
-                      context.pushNamed(
-                        AfriflexRoutes.homeRoute,
-                      );
-                    } catch (e) {
-                      print(e);
-                    }
-                  }
+                  // _formKey.currentState?.validate();
+                  // if (_formKey.currentState?.validate() ?? false) {
+                  //   try {
+                  context.pushNamed(
+                    AfriflexRoutes.enterMoneyRoute,
+                  );
+                  // } catch (e) {
+                  //   print(e);
+                  // }
+                  // }
                 },
               ),
             ],
           ),
         ),
       ),
-      actions: [],
+      actions: const [],
       backgroundColor: ThemeColors.whiteColor,
     );
   }

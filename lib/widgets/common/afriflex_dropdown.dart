@@ -77,7 +77,7 @@ class _AfriflexDropdownState extends State<AfriflexDropdown> {
                       onTap: () {
                         setState(() {
                           widget.controller.text =
-                              item.label; // Set selected label
+                              item.value; // Set selected label
                           _closeDropdown();
                           widget.onChanged(item);
                         });
@@ -139,24 +139,47 @@ class _AfriflexDropdownState extends State<AfriflexDropdown> {
               ),
         child: Stack(
           children: [
-            TextField(
-              controller: widget.controller,
-              readOnly: true, // Prevent manual input
-              style: TextStyle(
-                color: Colors.black, // Ensure text is visible
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Select an option',
-                hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      color: Colors.grey, // Placeholder style
-                    ),
-                contentPadding: const EdgeInsets.only(
-                  left: 12,
-                  right: 36, // Space for the dropdown icon
+            if (widget.isLanguagePicker ?? false)
+              const Positioned(
+                right: 50,
+                top: 10,
+                child: Icon(
+                  Icons.language,
+                  color: ThemeColors.orangeColor,
                 ),
               ),
-            ),
+            if (widget.isLanguagePicker ?? true)
+              Positioned(
+                right: 30,
+                top: 14,
+                child: Text(
+                  widget.controller.text,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: ThemeColors.blackColor,
+                      ),
+                ),
+              ),
+            if (widget.isLanguagePicker == false)
+              TextField(
+                controller: widget.controller,
+                readOnly: true,
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: widget.isLanguagePicker ?? false
+                      ? ''
+                      : 'Select an option',
+                  hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Colors.grey, // Placeholder style
+                      ),
+                  contentPadding: const EdgeInsets.only(
+                    left: 12,
+                    right: 36, // Space for the dropdown icon
+                  ),
+                ),
+              ),
             const Positioned(
               right: 8,
               top: 10,

@@ -1,4 +1,8 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/screens/confirm_payment_screen.dart';
+import 'package:afriflex/screens/create_tontine_screen.dart';
+import 'package:afriflex/screens/digital_tontine_screen.dart';
+import 'package:afriflex/screens/enter_amount_screen.dart';
 import 'package:afriflex/screens/error_screen.dart';
 import 'package:afriflex/screens/home_screen.dart';
 import 'package:afriflex/screens/login_screen.dart';
@@ -59,6 +63,26 @@ List<GoRoute> buildRoutes() {
       name: AfriflexRoutes.sendMoneyRoute,
       path: AfriflexRoutes.sendMoneyRoute,
       builder: (context, state) => const SendMoneyScreen(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.enterMoneyRoute,
+      path: AfriflexRoutes.enterMoneyRoute,
+      builder: (context, state) => const EnterAmountScreen(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.confirmPaymentRoute,
+      path: AfriflexRoutes.confirmPaymentRoute,
+      builder: (context, state) => const ConfirmPaymentScreen(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.digitalTontineRoute,
+      path: AfriflexRoutes.digitalTontineRoute,
+      builder: (context, state) => const DigitalTontineScreen(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.createTontineRoute,
+      path: AfriflexRoutes.createTontineRoute,
+      builder: (context, state) => const CreateTontineScreen(),
     )
   ];
 }

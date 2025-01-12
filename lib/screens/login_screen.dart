@@ -24,7 +24,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _isShowingPassword = false;
+  bool _isShowingPassword = true;
 
   @override
   void dispose() {

@@ -47,6 +47,15 @@ abstract class ThemeColors {
       Color(0xFFFFFFFF),
     ],
   );
+
+  static const blackColorGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      Color(0xFF000000),
+      Color(0xFF000000),
+    ],
+  );
 }
 
 @immutable

@@ -1,9 +1,10 @@
+import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -43,7 +44,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Stack(
                 clipBehavior: Clip.none, // Allows the card to overflow outside
                 children: [
-                  // Balance Container
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 32),
@@ -217,25 +217,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ],
               ),
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 FeatureItem(
                   icon: Icons.qr_code_scanner_outlined,
                   label: 'Digital Tontine',
                   color: Colors.orange,
+                  onPressed: () => context.pushNamed(
+                    AfriflexRoutes.digitalTontineRoute,
+                  ),
                 ),
                 FeatureItem(
                   icon: Icons.send_to_mobile_outlined,
                   label: 'Send Money',
                   color: Colors.orange,
+                  onPressed: () {
+                    context.pushNamed(
+                      AfriflexRoutes.sendMoneyRoute,
+                    );
+                  },
                 ),
-                FeatureItem(
+                const FeatureItem(
                   icon: Icons.account_balance_wallet_outlined,
                   label: 'Add Money',
                   color: Colors.orange,
                 ),
-                FeatureItem(
+                const FeatureItem(
                   icon: Icons.keyboard_arrow_down_rounded,
                   label: 'View more',
                   color: Colors.grey,
@@ -309,32 +317,35 @@ class FeatureItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.2,
-      height: MediaQuery.of(context).size.height * 0.11,
-      child: Column(
-        spacing: 8,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.05,
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: isViewMore
-                  ? BorderRadius.circular(Dimens.radiusCircular)
-                  : null,
-              border:
-                  isViewMore ? Border.all(color: Colors.grey.shade300) : null,
+    return GestureDetector(
+      onTap: onPressed,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.2,
+        height: MediaQuery.of(context).size.height * 0.11,
+        child: Column(
+          spacing: 8,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.05,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: isViewMore
+                    ? BorderRadius.circular(Dimens.radiusCircular)
+                    : null,
+                border:
+                    isViewMore ? Border.all(color: Colors.grey.shade300) : null,
+              ),
+              child: Icon(icon, color: color, size: 32),
             ),
-            child: Icon(icon, color: color, size: 32),
-          ),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w400,
-                ),
-            overflow: TextOverflow.visible,
-          ),
-        ],
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+              overflow: TextOverflow.visible,
+            ),
+          ],
+        ),
       ),
     );
   }

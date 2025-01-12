@@ -57,4 +57,12 @@ abstract class Styles {
           color: ThemeColors.orangeColor,
         ),
       );
+
+  static const TextStyle h2Heading = TextStyle(
+    fontFamily: _poppins,
+    fontSize: 28.0,
+    color: ThemeColors.whiteColor,
+    height: 32 / 28,
+    fontWeight: FontWeight.w400,
+  );
 }

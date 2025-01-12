@@ -2,7 +2,7 @@ import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/widgets/common/gradient_box_border.dart';
 import 'package:flutter/material.dart';
 
-enum AfriflexButtonVariant { dark, light, clear }
+enum AfriflexButtonVariant { dark, light, clear, black }
 
 extension AfriflexButtonVariantContent on AfriflexButtonVariant {
   Color get textColor {
@@ -13,6 +13,8 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
         return ThemeColors.whiteColor;
       case AfriflexButtonVariant.clear:
         return ThemeColors.blackColor;
+      case AfriflexButtonVariant.black:
+        return ThemeColors.whiteColor;
     }
   }
 
@@ -24,6 +26,8 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
         return ThemeColors.primaryColor;
       case AfriflexButtonVariant.clear:
         return ThemeColors.whiteColorGradient;
+      case AfriflexButtonVariant.black:
+        return ThemeColors.blackColorGradient;
     }
   }
 
@@ -34,6 +38,8 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
       case AfriflexButtonVariant.light:
         return ThemeColors.whiteColor;
       case AfriflexButtonVariant.clear:
+        return ThemeColors.whiteColor;
+      case AfriflexButtonVariant.black:
         return ThemeColors.whiteColor;
     }
   }
@@ -46,6 +52,8 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
         return ThemeColors.whiteColorGradient;
       case AfriflexButtonVariant.clear:
         return ThemeColors.whiteColorGradient;
+      case AfriflexButtonVariant.black:
+        return ThemeColors.blackColorGradient;
     }
   }
 
@@ -56,6 +64,8 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
       case AfriflexButtonVariant.light:
         return Colors.transparent;
       case AfriflexButtonVariant.clear:
+        return Colors.transparent;
+      case AfriflexButtonVariant.black:
         return Colors.transparent;
     }
   }
@@ -76,6 +86,11 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
         return const GradientBoxBorder(
           gradient: ThemeColors.primaryColor,
           width: 1,
+        );
+      case AfriflexButtonVariant.black:
+        return const GradientBoxBorder(
+          gradient: ThemeColors.blackColorGradient,
+          width: 0,
         );
     }
   }
