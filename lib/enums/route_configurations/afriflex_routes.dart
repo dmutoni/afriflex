@@ -10,4 +10,5 @@ abstract class AfriflexRoutes {
   static const String confirmPaymentRoute = '/Confirm_payment_screen';
   static const String digitalTontineRoute = '/digital_tontine_screen';
   static const String createTontineRoute = '/create_tontine_screen';
+  static const String addMembersRoute = '/add_members_screen';
 }

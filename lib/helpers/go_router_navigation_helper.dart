@@ -1,6 +1,7 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/screens/confirm_payment_screen.dart';
 import 'package:afriflex/screens/create_tontine_screen.dart';
+import 'package:afriflex/screens/digital_tontine_creation_success_screen.dart';
 import 'package:afriflex/screens/digital_tontine_screen.dart';
 import 'package:afriflex/screens/enter_amount_screen.dart';
 import 'package:afriflex/screens/error_screen.dart';
@@ -83,6 +84,11 @@ List<GoRoute> buildRoutes() {
       name: AfriflexRoutes.createTontineRoute,
       path: AfriflexRoutes.createTontineRoute,
       builder: (context, state) => const CreateTontineScreen(),
-    )
+    ),
+    GoRoute(
+      name: AfriflexRoutes.addMembersRoute,
+      path: AfriflexRoutes.addMembersRoute,
+      builder: (context, state) => const DigitalTontineCreationSuccessScreen(),
+    ),
   ];
 }

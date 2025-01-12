@@ -1,3 +1,6 @@
+import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_level.dart';
+import 'package:afriflex/helpers/snackbar_helper.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/afriflex_dropdown.dart';
@@ -6,6 +9,7 @@ import 'package:afriflex/widgets/common/input/afriflex_text_input.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateTontineScreen extends ConsumerStatefulWidget {
   const CreateTontineScreen({super.key});
@@ -81,7 +85,16 @@ class _CreateTontineScreenState extends ConsumerState<CreateTontineScreen> {
       actions: [
         AfriflexButton(
           title: 'Create tontine',
-          onTap: () {},
+          onTap: () {
+            SnackbarHelper.showSnackbar(
+              level: AfriflexTopSnackbarLevel.alert,
+              context: context,
+              message: 'Tontine created successfully',
+            );
+            context.pushNamed(
+              AfriflexRoutes.addMembersRoute,
+            );
+          },
         )
       ],
     );

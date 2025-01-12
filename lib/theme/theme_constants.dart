@@ -69,6 +69,16 @@ ThemeData getAppTheme({
         height: 1.5,
         letterSpacing: 0.6,
       ),
+      displayLarge: const TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.w500,
+        color: ThemeColors.orangeColor,
+      ),
+      titleMedium: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: ThemeColors.orangeColor,
+      ),
     ),
   );
 }
