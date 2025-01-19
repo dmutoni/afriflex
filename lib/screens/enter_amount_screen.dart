@@ -1,7 +1,6 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/enums/widget_configurations/afriflex_numpad_variations.dart';
 import 'package:afriflex/providers/amount_provider.dart';
-import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/widgets/common/afriflex_numpad.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';

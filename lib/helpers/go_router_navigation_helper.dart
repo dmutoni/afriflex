@@ -6,6 +6,7 @@ import 'package:afriflex/screens/digital_tontine_screen.dart';
 import 'package:afriflex/screens/enter_amount_screen.dart';
 import 'package:afriflex/screens/error_screen.dart';
 import 'package:afriflex/screens/home_screen.dart';
+import 'package:afriflex/screens/invite_using_username_screen.dart';
 import 'package:afriflex/screens/login_screen.dart';
 import 'package:afriflex/screens/onboarding_screen.dart';
 import 'package:afriflex/screens/otp_screen.dart';
@@ -95,6 +96,11 @@ List<GoRoute> buildRoutes() {
       name: AfriflexRoutes.selectFromContactsRoute,
       path: AfriflexRoutes.selectFromContactsRoute,
       builder: (context, state) => const SelectFromContactsScreen(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.inviteUsingUsernameRoute,
+      path: AfriflexRoutes.inviteUsingUsernameRoute,
+      builder: (context, state) => const InviteUsingUsernameUsername(),
     ),
   ];
 }

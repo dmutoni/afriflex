@@ -1,3 +1,4 @@
+import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
@@ -6,6 +7,7 @@ import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class SelectFromContactsScreen extends ConsumerStatefulWidget {
   const SelectFromContactsScreen({super.key});
@@ -46,7 +48,9 @@ class _SelectFromContactsScreenState
             contactsWidget(),
             AfriflexButton(
               title: 'Continue',
-              onTap: () {},
+              onTap: () {
+                context.pushNamed(AfriflexRoutes.inviteUsingUsernameRoute);
+              },
             ),
             Row(
               spacing: 14,

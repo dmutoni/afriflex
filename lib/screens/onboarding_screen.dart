@@ -1,5 +1,4 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
-import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/screens/onboarding_tontine_carousel.dart';
 
 import 'package:afriflex/values/dimens.dart';
@@ -67,9 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 isLanguagePicker: true,
                 items: items,
                 // selectedItem: items.first,
-                onChanged: (selectedItem) {
-                  print('Selected: ${selectedItem.label}');
-                },
+                onChanged: (selectedItem) {},
                 controller: phoneNumberController,
               ),
             ),
@@ -104,7 +101,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onTap: () {
                   context.pushNamed(AfriflexRoutes.loginRoute);
                 },
-                variant: AfriflexButtonVariant.light,
                 isEnabled: true,
                 isLoading: false,
                 isVisible: true,

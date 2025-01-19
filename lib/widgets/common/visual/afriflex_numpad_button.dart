@@ -1,5 +1,4 @@
 import 'package:afriflex/enums/widget_configurations/afriflex_numpad_variations.dart';
-import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/theme/styles.dart';
 import 'package:afriflex/values/duration_values.dart';
 import 'package:afriflex/widgets/common/input/afriflex_material_button.dart';
@@ -11,13 +10,13 @@ class AfriflexNumpadButton extends StatefulWidget {
   final AfriflexNumpadVariant variant;
   final bool isDarkMode;
 
-  AfriflexNumpadButton({
-    Key? key,
+  const AfriflexNumpadButton({
+    super.key,
     required this.value,
     required this.onTap,
     required this.isDarkMode,
     this.variant = AfriflexNumpadVariant.grey,
-  }) : super(key: key);
+  });
 
   @override
   _AfriflexNumpadButtonState createState() => _AfriflexNumpadButtonState();
