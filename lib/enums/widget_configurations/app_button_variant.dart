@@ -23,7 +23,7 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
       case AfriflexButtonVariant.dark:
         return ThemeColors.primaryColor;
       case AfriflexButtonVariant.light:
-        return ThemeColors.primaryColor;
+        return ThemeColors.orangeColorGradient;
       case AfriflexButtonVariant.clear:
         return ThemeColors.whiteColorGradient;
       case AfriflexButtonVariant.black:
@@ -79,8 +79,8 @@ extension AfriflexButtonVariantContent on AfriflexButtonVariant {
         );
       case AfriflexButtonVariant.light:
         return const GradientBoxBorder(
-          gradient: ThemeColors.primaryColor,
-          width: 1,
+          gradient: ThemeColors.whiteColorGradient,
+          width: 0,
         );
       case AfriflexButtonVariant.clear:
         return const GradientBoxBorder(

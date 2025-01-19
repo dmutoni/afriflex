@@ -32,7 +32,7 @@ ThemeData getAppTheme({
         letterSpacing: 0.6,
       ),
       bodyLarge: const TextStyle(
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: FontWeight.w200,
         color: ThemeColors.blackColor,
         height: 1.5,

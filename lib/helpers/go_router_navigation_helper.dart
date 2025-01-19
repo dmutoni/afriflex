@@ -10,6 +10,7 @@ import 'package:afriflex/screens/login_screen.dart';
 import 'package:afriflex/screens/onboarding_screen.dart';
 import 'package:afriflex/screens/otp_screen.dart';
 import 'package:afriflex/screens/email_entry_screen.dart';
+import 'package:afriflex/screens/select_from_contacts_screen.dart';
 import 'package:afriflex/screens/send_money_screen.dart';
 import 'package:afriflex/screens/signup_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,6 +90,11 @@ List<GoRoute> buildRoutes() {
       name: AfriflexRoutes.addMembersRoute,
       path: AfriflexRoutes.addMembersRoute,
       builder: (context, state) => const DigitalTontineCreationSuccessScreen(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.selectFromContactsRoute,
+      path: AfriflexRoutes.selectFromContactsRoute,
+      builder: (context, state) => const SelectFromContactsScreen(),
     ),
   ];
 }
