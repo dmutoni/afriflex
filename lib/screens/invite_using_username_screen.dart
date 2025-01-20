@@ -1,3 +1,4 @@
+import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_level.dart';
 import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_variant.dart';
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
@@ -10,6 +11,7 @@ import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class InviteUsingUsernameUsername extends ConsumerStatefulWidget {
   const InviteUsingUsernameUsername({super.key});
@@ -89,7 +91,11 @@ class _InviteUsingUsernameUsernameState
                 ),
                 AfriflexButton(
                   title: 'Continue',
-                  onTap: () {},
+                  onTap: () {
+                    context.pushNamed(
+                      AfriflexRoutes.pendingRequestRoute,
+                    );
+                  },
                 ),
               ],
             ),

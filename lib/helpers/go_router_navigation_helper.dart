@@ -11,6 +11,7 @@ import 'package:afriflex/screens/login_screen.dart';
 import 'package:afriflex/screens/onboarding_screen.dart';
 import 'package:afriflex/screens/otp_screen.dart';
 import 'package:afriflex/screens/email_entry_screen.dart';
+import 'package:afriflex/screens/pending_request_screens.dart';
 import 'package:afriflex/screens/select_from_contacts_screen.dart';
 import 'package:afriflex/screens/send_money_screen.dart';
 import 'package:afriflex/screens/signup_screen.dart';
@@ -101,6 +102,11 @@ List<GoRoute> buildRoutes() {
       name: AfriflexRoutes.inviteUsingUsernameRoute,
       path: AfriflexRoutes.inviteUsingUsernameRoute,
       builder: (context, state) => const InviteUsingUsernameUsername(),
+    ),
+    GoRoute(
+      name: AfriflexRoutes.pendingRequestRoute,
+      path: AfriflexRoutes.pendingRequestRoute,
+      builder: (context, state) => const PendingRequestScreen(),
     ),
   ];
 }

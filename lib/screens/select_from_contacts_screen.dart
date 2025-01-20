@@ -73,7 +73,11 @@ class _SelectFromContactsScreenState
             AfriflexButton(
               variant: AfriflexButtonVariant.clear,
               title: 'Input AfriflexPay\'s username',
-              onTap: () {},
+              onTap: () {
+                context.pushNamed(
+                  AfriflexRoutes.inviteUsingUsernameRoute,
+                );
+              },
             ),
           ],
         ),
@@ -198,9 +202,7 @@ class _SelectFromContactsScreenState
               height: 40,
               title: 'Invite',
               variant: AfriflexButtonVariant.light,
-              onTap: () {
-                // Handle invite
-              },
+              onTap: () {},
             ),
           ],
         ),

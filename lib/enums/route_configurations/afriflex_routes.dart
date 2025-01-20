@@ -14,4 +14,5 @@ abstract class AfriflexRoutes {
   static const String selectFromContactsRoute = '/select_from_contacts_screen';
   static const String inviteUsingUsernameRoute =
       '/invite_using_username_screen';
+  static const String pendingRequestRoute = '/pending_request_screen';
 }
