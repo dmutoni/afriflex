@@ -142,6 +142,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 },
               ),
               IntlPhoneField(
+                controller: phoneController,
                 decoration: const InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: 'Phone Number',
@@ -167,7 +168,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   ),
                 ),
                 initialCountryCode: 'IN',
-                controller: phoneController,
                 validator: (value) {
                   if (value == null) {
                     return 'Phone number is required';

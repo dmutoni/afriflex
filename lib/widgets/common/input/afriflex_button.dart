@@ -75,6 +75,7 @@ class AfriflexButton extends StatelessWidget {
                     isLoading ? height ?? Dimens.inputHeight : double.infinity,
               ),
               width: width ?? double.infinity,
+              height: height ?? Dimens.inputHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

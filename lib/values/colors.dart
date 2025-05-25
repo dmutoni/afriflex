@@ -21,6 +21,15 @@ abstract class ThemeColors {
     ],
   );
 
+  static const drawerGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color(0xFF000000),
+      Color(0xFFF59421),
+    ],
+  );
+
   static const orangeColorGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
@@ -36,6 +45,15 @@ abstract class ThemeColors {
     colors: [
       Color(0xFFFFFFFF),
       Color(0xFFFFFFFF),
+    ],
+  );
+
+  static const blackColorGradient = LinearGradient(
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+    colors: [
+      Color(0xFF000000),
+      Color(0xFF000000),
     ],
   );
 }

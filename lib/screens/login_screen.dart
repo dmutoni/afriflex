@@ -10,6 +10,7 @@ import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
 import 'package:afriflex/widgets/common/input/afriflex_text_input.dart';
+import 'package:afriflex/widgets/common/visual/afriflex_or_widget.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,7 +30,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _isShowingPassword = false;
+  bool _isShowingPassword = true;
 
   void _handleSignIn(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
@@ -155,24 +156,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // isEnabled: _formKey.currentState?.validate() ?? false,
                 onTap: () => _handleSignIn(context),
               ),
-              Row(
-                spacing: 14,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    child: const Divider(
-                      color: ThemeColors.grayLight,
-                    ),
-                  ),
-                  const Text('OR'),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    child: const Divider(
-                      color: ThemeColors.grayLight,
-                    ),
-                  ),
-                ],
-              ),
+              const AfriflexOrWidget(),
               AfriflexButton(
                 title: 'SIGN UP',
                 variant: AfriflexButtonVariant.clear,
