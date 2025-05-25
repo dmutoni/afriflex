@@ -39,13 +39,13 @@ class VerifySignInOTPResBodyDto {
   String message;
   String accessToken;
   String tokenType;
-  String refreshToken;
+  String? refreshToken;
 
   VerifySignInOTPResBodyDto({
     required this.message,
     required this.accessToken,
     required this.tokenType,
-    required this.refreshToken,
+    this.refreshToken,
   });
 
   factory VerifySignInOTPResBodyDto.fromJson(Map<String, dynamic> json) {
