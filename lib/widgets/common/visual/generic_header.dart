@@ -2,6 +2,7 @@ import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/duration_values.dart';
 import 'package:afriflex/widgets/common/input/protected_icon_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 abstract class _Constants {
   static const leadingWidth = 48.0;
@@ -36,7 +37,7 @@ class _GenericHeaderState extends State<GenericHeader> {
         centerTitle: true,
         leadingWidth: _Constants.leadingWidth,
         leading: widget.leadingContentOverride ??
-            (Navigator.of(context).canPop() && widget.canPop
+            (context.canPop() && widget.canPop
                 ? ProtectedIconButton.Create(
                     icon: const Icon(
                       Icons.chevron_left,
@@ -44,8 +45,9 @@ class _GenericHeaderState extends State<GenericHeader> {
                     ),
                     onPressed: () async {
                       await Future.delayed(DurationValues.onTapDelay);
-
-                      Navigator.of(context).canPop();
+                      if (context.mounted) {
+                        context.pop();
+                      }
                     },
                   )
                 : Container()),
