@@ -129,27 +129,41 @@ class GenericTemplate extends ConsumerWidget {
                         scaffoldKey.currentState?.openEndDrawer();
                       },
                     ),
-                    const Row(
-                      spacing: 12,
-                      children: [
-                        Icon(
-                          Icons.home_outlined,
-                          color: ThemeColors.whiteColor,
-                          size: 30,
-                        ),
-                        Text('Home', style: Styles.drawerTextStyle),
-                      ],
+                    InkWell(
+                      onTap: () {
+                        if(GoRouterState.of(context).matchedLocation != AfriflexRoutes.homeRoute) {
+                          context.pushNamed(AfriflexRoutes.homeRoute);
+                        }
+                      },
+                      child: const Row(
+                        spacing: 12,
+                        children: [
+                          Icon(
+                            Icons.home_outlined,
+                            color: ThemeColors.whiteColor,
+                            size: 30,
+                          ),
+                          Text('Home', style: Styles.drawerTextStyle),
+                        ],
+                      ),
                     ),
-                    const Row(
-                      spacing: 12,
-                      children: [
-                        Icon(
-                          Icons.real_estate_agent_sharp,
-                          color: ThemeColors.whiteColor,
-                          size: 30,
-                        ),
-                        Text('Digital tontine', style: Styles.drawerTextStyle),
-                      ],
+                    InkWell(
+                      onTap: () {
+                        if(GoRouterState.of(context).matchedLocation != AfriflexRoutes.digitalTontineRoute) {
+                          context.pushNamed(AfriflexRoutes.digitalTontineRoute);
+                        }
+                      },
+                      child: const Row(
+                        spacing: 12,
+                        children: [
+                          Icon(
+                            Icons.real_estate_agent_sharp,
+                            color: ThemeColors.whiteColor,
+                            size: 30,
+                          ),
+                          Text('Digital tontine', style: Styles.drawerTextStyle),
+                        ],
+                      ),
                     ),
                     const Row(
                       spacing: 12,
@@ -162,7 +176,7 @@ class GenericTemplate extends ConsumerWidget {
                         Text('Wallet', style: Styles.drawerTextStyle),
                       ],
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         context.pushNamed(
                           AfriflexRoutes.sendMoneyRoute,
@@ -197,7 +211,7 @@ class GenericTemplate extends ConsumerWidget {
                     InkWell(
                       onTap: () {
                         ref.read(authProvider.notifier).signOut();
-                        context.pushNamed(AfriflexRoutes.loginRoute);
+                        context.goNamed(AfriflexRoutes.loginRoute);
                       },
                       child: const Row(
                         spacing: 12,
