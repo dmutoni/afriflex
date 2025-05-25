@@ -1,4 +1,5 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/screens/confirm_payment_screen.dart';
 import 'package:afriflex/screens/create_tontine_screen.dart';
 import 'package:afriflex/screens/digital_tontine_creation_success_screen.dart';
@@ -22,12 +23,51 @@ import 'package:go_router/go_router.dart';
 final _key = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider<GoRouter>((ref) {
+  final protectedRoutes = {
+    AfriflexRoutes.homeRoute,
+    AfriflexRoutes.sendMoneyRoute,
+    AfriflexRoutes.enterMoneyRoute,
+    AfriflexRoutes.confirmPaymentRoute,
+    AfriflexRoutes.digitalTontineRoute,
+    AfriflexRoutes.createTontineRoute,
+    AfriflexRoutes.addMembersRoute,
+    AfriflexRoutes.selectFromContactsRoute,
+    AfriflexRoutes.inviteUsingUsernameRoute,
+    AfriflexRoutes.pendingRequestRoute,
+  };
+
   return GoRouter(
     navigatorKey: _key,
     initialLocation: AfriflexRoutes.onboardingRoute,
     debugLogDiagnostics: true,
     routes: buildRoutes(),
     errorBuilder: (context, state) => const ErrorScreen(),
+    redirect: (context, state) {
+      // Access the auth state
+      final authState = ref.read(authProvider);
+      final isLoggedIn = authState.accessToken != null && authState.accessToken!.isNotEmpty;
+
+      // Get the current route
+      final currentRoute = state.matchedLocation;
+
+      // Redirect logic
+      if (!isLoggedIn && protectedRoutes.contains(currentRoute)) {
+        // Redirect to login if trying to access a protected route while not logged in
+        return AfriflexRoutes.loginRoute;
+      } else if (isLoggedIn &&
+          [
+            AfriflexRoutes.onboardingRoute,
+            AfriflexRoutes.emailEntryRoute,
+            AfriflexRoutes.signupRoute,
+            AfriflexRoutes.loginRoute,
+          ].contains(currentRoute)) {
+        // Redirect to home if already logged in and trying to access public routes
+        return AfriflexRoutes.homeRoute;
+      }
+
+      // No redirect needed
+      return null;
+    },
   );
 });
 

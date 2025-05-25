@@ -43,6 +43,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
         if (context.mounted) {
           context.pushNamed(AfriflexRoutes.otpCodeRoute);
+          _emailController.clear();
+          _passwordController.clear();
         }
       } catch (error) {
         if (context.mounted) {

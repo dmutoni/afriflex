@@ -43,9 +43,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
       try {
         await ref.read(authProvider.notifier).verifyOTP(userEmail, _pinInputValue);
         if (ref.read(authProvider.notifier).isLoggedIn() && context.mounted) {
-          context.pushNamed(AfriflexRoutes.homeRoute);
+          context.goNamed(AfriflexRoutes.homeRoute);
         } else if (context.mounted) {
-          context.pushNamed(AfriflexRoutes.loginRoute);
+          context.goNamed(AfriflexRoutes.loginRoute);
         }
       } catch (e) {
         if (kDebugMode) {
