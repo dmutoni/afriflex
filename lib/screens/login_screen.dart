@@ -1,6 +1,11 @@
+import 'package:afriflex/api/auth_api.dart';
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_level.dart';
+import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_variant.dart';
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
+import 'package:afriflex/helpers/snackbar_helper.dart';
 import 'package:afriflex/helpers/validation_helper.dart';
+import 'package:afriflex/models/dto/signin_dto.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
@@ -25,6 +30,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isShowingPassword = false;
+
+  void _handleSignIn(BuildContext context) async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        final response = await signin(
+          SignInReqBodyDto(
+            login: _emailController.text,
+            password: _passwordController.text,
+          ),
+        );
+        // ignore: avoid_print
+        print(response.accessToken);
+        if (context.mounted) {
+          SnackbarHelper.showSnackbar(
+            message: 'Login successful', 
+            level: AfriflexTopSnackbarLevel.alert,
+            context: context,
+          );
+          //context.pushNamed(AfriflexRoutes.homeRoute);
+        }
+      } catch (error) {
+        if (context.mounted) {
+          SnackbarHelper.showSnackbar(
+            message: 'Invalid credentials, please try again.',
+            level: AfriflexTopSnackbarLevel.warning,
+            variant: AfriflexTopSnackbarVariant.error,
+            context: context,
+          );
+        }
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -72,7 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     return 'Email is required';
                   }
                   if (!isEmailValid(value)) {
-                    return 'Please enter your email in format: yourname@example.com';
+                    return 'Please enter your email address';
                   }
                   return null;
                 },
@@ -81,7 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 controller: _passwordController,
                 label: 'Password',
                 isRequired: true,
-                obscureText: _isShowingPassword,
+                obscureText: !_isShowingPassword,
                 validateOnInput: true,
                 trailingWidgetOverride: IconButton(
                   onPressed: () => setState(
@@ -116,18 +153,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               AfriflexButton(
                 title: 'LOGIN',
                 // isEnabled: _formKey.currentState?.validate() ?? false,
-                onTap: () async {
-                  _formKey.currentState?.validate();
-                  if (_formKey.currentState?.validate() ?? false) {
-                    try {
-                      context.pushNamed(
-                        AfriflexRoutes.homeRoute,
-                      );
-                    } catch (e) {
-                      print(e);
-                    }
-                  }
-                },
+                onTap: () => _handleSignIn(context),
               ),
               Row(
                 spacing: 14,

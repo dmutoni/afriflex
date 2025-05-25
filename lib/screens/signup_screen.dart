@@ -1,5 +1,10 @@
+import 'package:afriflex/api/auth_api.dart';
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_level.dart';
+import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_variant.dart';
+import 'package:afriflex/helpers/snackbar_helper.dart';
 import 'package:afriflex/helpers/validation_helper.dart';
+import 'package:afriflex/models/dto/signup_dto.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
@@ -18,23 +23,57 @@ class SignupScreen extends ConsumerStatefulWidget {
 }
 
 class _SignupScreenState extends ConsumerState<SignupScreen> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
   bool isShowingPassword = false;
   bool isShowingConfirmPassword = false;
 
+  void _handleSignUp(BuildContext context) async {
+    formKey.currentState?.validate();
+    if (formKey.currentState?.validate() ?? false) {
+      try {
+        final response = await signup(
+          SignUpReqBodyDto(
+            firstName: firstNameController.text,
+            lastName: lastNameController.text,
+            emailAddress: emailController.text,
+            phoneNumber: phoneController.text,
+            countryId: 1, // Assuming a default country ID
+            password: passwordController.text,
+          ),
+        );
+        // ignore: avoid_print
+        print('Sign up successful: USER_ID=${response.data.id}');
+        if (context.mounted) {
+          context.pushNamed(AfriflexRoutes.otpCodeRoute);
+        }
+      } catch (e) {
+        if (context.mounted) {
+          SnackbarHelper.showSnackbar(
+            message: 'Sign up failed, please try again.',
+            level: AfriflexTopSnackbarLevel.warning,
+            variant: AfriflexTopSnackbarVariant.error,
+            context: context,
+          );
+        }
+      }
+    }
+  }
+
   @override
   void dispose() {
     passwordController.dispose();
     confirmPasswordController.dispose();
     emailController.dispose();
-    nameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     phoneController.dispose();
     super.dispose();
   }
@@ -46,8 +85,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
     return GenericTemplate(
       title: '',
       backgroundColor: ThemeColors.whiteColor,
@@ -66,6 +103,30 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
               const Text('Create an account'),
               AfriflexTextInput(
+                controller: firstNameController,
+                label: 'First Name',
+                isRequired: true,
+                validateOnInput: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'First Name is required';
+                  }
+                  return null;
+                },
+              ),
+              AfriflexTextInput(
+                controller: lastNameController,
+                label: 'Last Name',
+                isRequired: true,
+                validateOnInput: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Last Name is required';
+                  }
+                  return null;
+                },
+              ),
+              AfriflexTextInput(
                 controller: emailController,
                 label: 'Email address',
                 isRequired: true,
@@ -80,30 +141,23 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   return null;
                 },
               ),
-              AfriflexTextInput(
-                controller: nameController,
-                label: 'Name',
-                isRequired: true,
-                validateOnInput: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Name is required';
-                  }
-                  return null;
-                },
-              ),
               IntlPhoneField(
                 decoration: const InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: 'Phone Number',
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: ThemeColors.lightGray2,
+                      color: ThemeColors.grayLight,
                     ),
                     borderRadius: BorderRadius.all(
                       Radius.circular(
                         Dimens.radiusDefault,
                       ),
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: ThemeColors.grayLight,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -113,23 +167,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   ),
                 ),
                 initialCountryCode: 'IN',
-                onChanged: (phone) {
-                  print(phone.completeNumber);
-                },
+                controller: phoneController,
                 validator: (value) {
                   if (value == null) {
-                    return 'Phone number is required';
-                  }
-                  return null;
-                },
-              ),
-              AfriflexTextInput(
-                controller: phoneController,
-                label: 'Phone number',
-                isRequired: true,
-                validateOnInput: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
                     return 'Phone number is required';
                   }
                   return null;
@@ -139,7 +179,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 label: 'Password',
                 controller: passwordController,
                 isRequired: true,
-                obscureText: isShowingPassword,
+                obscureText: !isShowingPassword,
                 validateOnInput: true,
                 trailingWidgetOverride: IconButton(
                   onPressed: () => setState(
@@ -169,7 +209,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 label: 'Confirm password',
                 controller: confirmPasswordController,
                 isRequired: true,
-                obscureText: isShowingConfirmPassword,
+                obscureText: !isShowingConfirmPassword,
                 validateOnInput: true,
                 trailingWidgetOverride: IconButton(
                   onPressed: () => setState(
@@ -199,17 +239,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       actions: [
         AfriflexButton(
           title: 'START',
-          onTap: () async {
-            if (formKey.currentState?.validate() ?? false) {
-              try {
-                context.pushNamed(
-                  AfriflexRoutes.homeRoute,
-                );
-              } catch (e) {
-                print(e);
-              }
-            }
-          },
+          onTap: () => _handleSignUp(context),
         ),
       ],
     );

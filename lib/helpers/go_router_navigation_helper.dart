@@ -24,7 +24,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 List<GoRoute> buildRoutes() {
   return [
     GoRoute(
-      name: 'onboarding',
+      name: AfriflexRoutes.onboardingRoute,
       path: AfriflexRoutes.onboardingRoute,
       builder: (context, state) => const OnboardingScreen(),
     ),
