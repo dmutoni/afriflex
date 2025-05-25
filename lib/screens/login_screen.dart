@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             level: AfriflexTopSnackbarLevel.alert,
             context: context,
           );
-          //context.pushNamed(AfriflexRoutes.homeRoute);
+          context.pushNamed(AfriflexRoutes.homeRoute);
         }
       } catch (error) {
         if (context.mounted) {
