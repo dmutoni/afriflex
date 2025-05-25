@@ -9,7 +9,7 @@ abstract class Dimens {
   static const marginTen = 10.0;
   static const marginTwelve = 12.0;
   static const marginFourteen = 14.0;
-  static const marginFifteen = 14.0;
+  static const marginFifteen = 15.0;
   static const marginDefault = 16.0;
   static const marginEigtheen = 18.0;
   static const marginMiddle = 20.0;

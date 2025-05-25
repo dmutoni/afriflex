@@ -32,7 +32,7 @@ ThemeData getAppTheme({
         letterSpacing: 0.6,
       ),
       bodyLarge: const TextStyle(
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: FontWeight.w200,
         color: ThemeColors.blackColor,
         height: 1.5,
@@ -68,6 +68,16 @@ ThemeData getAppTheme({
         color: ThemeColors.blackColor,
         height: 1.5,
         letterSpacing: 0.6,
+      ),
+      displayLarge: const TextStyle(
+        fontSize: 32,
+        fontWeight: FontWeight.w500,
+        color: ThemeColors.orangeColor,
+      ),
+      titleMedium: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: ThemeColors.orangeColor,
       ),
     ),
   );

@@ -93,6 +93,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 },
               ),
               IntlPhoneField(
+                controller: phoneController,
                 decoration: const InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: 'Phone Number',
@@ -118,18 +119,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 },
                 validator: (value) {
                   if (value == null) {
-                    return 'Phone number is required';
-                  }
-                  return null;
-                },
-              ),
-              AfriflexTextInput(
-                controller: phoneController,
-                label: 'Phone number',
-                isRequired: true,
-                validateOnInput: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
                     return 'Phone number is required';
                   }
                   return null;
@@ -203,7 +192,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             if (formKey.currentState?.validate() ?? false) {
               try {
                 context.pushNamed(
-                  AfriflexRoutes.homeRoute,
+                  AfriflexRoutes.otpCodeRoute,
                 );
               } catch (e) {
                 print(e);

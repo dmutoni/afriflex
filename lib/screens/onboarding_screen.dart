@@ -1,5 +1,4 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
-import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/screens/onboarding_tontine_carousel.dart';
 
 import 'package:afriflex/values/dimens.dart';
@@ -18,6 +17,19 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final TextEditingController phoneNumberController = TextEditingController();
+
+  @override
+  void dispose() {
+    phoneNumberController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final items = [
@@ -51,11 +63,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 300),
               child: AfriflexDropdown(
+                isLanguagePicker: true,
                 items: items,
-                selectedItem: items.first,
-                onChanged: (selectedItem) {
-                  print('Selected: ${selectedItem.label}');
-                },
+                // selectedItem: items.first,
+                onChanged: (selectedItem) {},
+                controller: phoneNumberController,
               ),
             ),
             const SizedBox(height: 40),
@@ -89,7 +101,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onTap: () {
                   context.pushNamed(AfriflexRoutes.loginRoute);
                 },
-                variant: AfriflexButtonVariant.light,
                 isEnabled: true,
                 isLoading: false,
                 isVisible: true,
