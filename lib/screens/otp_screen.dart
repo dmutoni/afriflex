@@ -1,5 +1,9 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_level.dart';
+import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_variant.dart';
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
+import 'package:afriflex/helpers/snackbar_helper.dart';
+import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/theme/styles.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
@@ -32,6 +36,40 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
   String _pinInputValue = '';
   bool _isResending = false;
   bool _isSubmitting = false;
+
+  Future<void> _verifyPin(BuildContext context, WidgetRef ref) async {
+    final String? userEmail = ref.read(authProvider).useEmail;
+    if (_pinInputValue.length == 6 && userEmail != null) {
+      try {
+        await ref.read(authProvider.notifier).verifyOTP(userEmail, _pinInputValue);
+        if (ref.read(authProvider.notifier).isLoggedIn() && context.mounted) {
+          context.pushNamed(AfriflexRoutes.homeRoute);
+        } else if (context.mounted) {
+          context.pushNamed(AfriflexRoutes.loginRoute);
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error verifying OTP: $e');
+        }
+        if (context.mounted) {
+          SnackbarHelper.showSnackbar(
+            message: 'Invalid code, please try again.',
+            level: AfriflexTopSnackbarLevel.warning,
+            variant: AfriflexTopSnackbarVariant.error,
+            context: context,
+          );
+        }
+      } finally {
+        if (context.mounted) {
+          setState(() {
+            _pinInputValue = '';
+            _pinInputController.clear();
+            _isSubmitting = false;
+          });
+        }
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -138,30 +176,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
           title: 'Verify Code',
           isEnabled: _pinInputValue.length == 6,
           isLoading: _isSubmitting,
-          onTap: () async {
-            try {
-              if (mounted) {
-                setState(() {
-                  _isSubmitting = true;
-                });
-              }
-              context.pushNamed(AfriflexRoutes.loginRoute);
-            } on Exception catch (e) {
-              if (kDebugMode) {
-                print(e);
-              }
-            } finally {
-              if (mounted) {
-                setState(
-                  () {
-                    _pinInputValue = '';
-                    _pinInputController.clear();
-                    _isSubmitting = false;
-                  },
-                );
-              }
-            }
-          },
+          onTap: () => _verifyPin(context, ref),
         ),
         AfriflexButton(
           title: 'Resend Code',

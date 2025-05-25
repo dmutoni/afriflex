@@ -1,4 +1,5 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/theme/styles.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
@@ -193,16 +194,22 @@ class GenericTemplate extends ConsumerWidget {
                         Text('Customer Support', style: Styles.drawerTextStyle),
                       ],
                     ),
-                    const Row(
-                      spacing: 12,
-                      children: [
-                        Icon(
-                          Icons.logout_outlined,
-                          color: ThemeColors.whiteColor,
-                          size: 30,
-                        ),
-                        Text('Logout', style: Styles.drawerTextStyle),
-                      ],
+                    InkWell(
+                      onTap: () {
+                        ref.read(authProvider.notifier).signOut();
+                        context.pushNamed(AfriflexRoutes.loginRoute);
+                      },
+                      child: const Row(
+                        spacing: 12,
+                        children: [
+                          Icon(
+                            Icons.logout_outlined,
+                            color: ThemeColors.whiteColor,
+                            size: 30,
+                          ),
+                          Text('Logout', style: Styles.drawerTextStyle),
+                        ],
+                      ),
                     ),
                   ],
                 ),

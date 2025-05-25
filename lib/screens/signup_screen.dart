@@ -1,10 +1,10 @@
-import 'package:afriflex/api/auth_api.dart';
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_level.dart';
 import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_variant.dart';
 import 'package:afriflex/helpers/snackbar_helper.dart';
 import 'package:afriflex/helpers/validation_helper.dart';
-import 'package:afriflex/models/dto/signup_dto.dart';
+import 'package:afriflex/models/dto/auth_dto.dart';
+import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
@@ -35,11 +35,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool isShowingPassword = false;
   bool isShowingConfirmPassword = false;
 
-  void _handleSignUp(BuildContext context) async {
+  void _handleSignUp(BuildContext context, WidgetRef ref) async {
     formKey.currentState?.validate();
     if (formKey.currentState?.validate() ?? false) {
       try {
-        final response = await signup(
+        await ref.read(authProvider.notifier).signUp(
           SignUpReqBodyDto(
             firstName: firstNameController.text,
             lastName: lastNameController.text,
@@ -49,8 +49,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             password: passwordController.text,
           ),
         );
-        // ignore: avoid_print
-        print('Sign up successful: USER_ID=${response.data.id}');
         if (context.mounted) {
           context.pushNamed(AfriflexRoutes.otpCodeRoute);
         }
@@ -239,7 +237,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       actions: [
         AfriflexButton(
           title: 'START',
-          onTap: () => _handleSignUp(context),
+          onTap: () => _handleSignUp(context, ref),
         ),
       ],
     );

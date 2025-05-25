@@ -20,7 +20,7 @@ class User {
   final DateTime? resetAllowedUntil;
   final int? loginFailureCount;
   final String activationCode;
-  final String? signature;
+  final dynamic signature;
   final bool accountExpired;
   final bool credentialsExpired;
   final bool accountEnabled;
@@ -88,5 +88,34 @@ class User {
       accountEnabled: json['accountEnabled'] as bool,
       accountLocked: json['accountLocked'] as bool,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'emailAddress': emailAddress,
+      'phoneNumber': phoneNumber,
+      'gender': gender,
+      'roles': roles.map((role) => role.toJson()).toList(),
+      'status': status,
+      'name': name,
+      'firstName': firstName,
+      'lastName': lastName,
+      'employeeAccount': employeeAccount,
+      'deletedFlag': deletedFlag,
+      'credentialsExpiryDate': credentialsExpiryDate.toIso8601String(),
+      'lockedAt': lockedAt?.toIso8601String(),
+      'firstLogin': firstLogin,
+      'createdAt': createdAt.toIso8601String(),
+      'lastLogin': lastLogin?.toIso8601String(),
+      'resetAllowedUntil': resetAllowedUntil?.toIso8601String(),
+      'loginFailureCount': loginFailureCount,
+      'activationCode': activationCode,
+      'signature': signature,
+      'accountExpired': accountExpired,
+      'credentialsExpired': credentialsExpired,
+      'accountEnabled': accountEnabled,
+      'accountLocked': accountLocked,
+    };
   }
 }

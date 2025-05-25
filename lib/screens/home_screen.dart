@@ -1,4 +1,5 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
@@ -16,11 +17,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    
     return GenericTemplate(
       isScrollable: true,
       title: '',
       actionsContentOverride: Image.asset(
-        ''
         'assets/images/home_page/profile.png',
       ),
       content: Padding(
@@ -31,7 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           spacing: 10,
           children: [
             Text(
-              'Hi, Jacques',
+              'Hi, ${authState.user?.lastName}',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontSize: 24,
                     fontWeight: FontWeight.w500,

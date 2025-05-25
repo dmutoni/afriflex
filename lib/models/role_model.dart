@@ -25,4 +25,15 @@ class Role {
       authority: json['authority'] as String,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'description': description,
+      'adminLevel': adminLevel,
+      'name': name,
+      'status': status,
+      'authority': authority,
+    };
+  }
 }

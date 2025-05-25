@@ -1,11 +1,11 @@
-import 'package:afriflex/api/auth_api.dart';
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_level.dart';
 import 'package:afriflex/enums/widget_configurations/afriflex_top_snackbar_variant.dart';
 import 'package:afriflex/enums/widget_configurations/app_button_variant.dart';
 import 'package:afriflex/helpers/snackbar_helper.dart';
 import 'package:afriflex/helpers/validation_helper.dart';
-import 'package:afriflex/models/dto/signin_dto.dart';
+import 'package:afriflex/models/dto/auth_dto.dart';
+import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/common/input/afriflex_button.dart';
@@ -32,24 +32,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   bool _isShowingPassword = true;
 
-  void _handleSignIn(BuildContext context) async {
+  void _handleSignIn(BuildContext context, WidgetRef ref) async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        final response = await signin(
+        await ref.read(authProvider.notifier).signIn(
           SignInReqBodyDto(
             login: _emailController.text,
             password: _passwordController.text,
           ),
         );
-        // ignore: avoid_print
-        print(response.accessToken);
         if (context.mounted) {
-          SnackbarHelper.showSnackbar(
-            message: 'Login successful', 
-            level: AfriflexTopSnackbarLevel.alert,
-            context: context,
-          );
-          context.pushNamed(AfriflexRoutes.homeRoute);
+          context.pushNamed(AfriflexRoutes.otpCodeRoute);
         }
       } catch (error) {
         if (context.mounted) {
@@ -154,7 +147,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               AfriflexButton(
                 title: 'LOGIN',
                 // isEnabled: _formKey.currentState?.validate() ?? false,
-                onTap: () => _handleSignIn(context),
+                onTap: () => _handleSignIn(context, ref),
               ),
               const AfriflexOrWidget(),
               AfriflexButton(
