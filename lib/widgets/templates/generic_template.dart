@@ -1,3 +1,4 @@
+// lib/widgets/templates/generic_template.dart
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
 import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/theme/styles.dart';
@@ -18,6 +19,7 @@ class GenericTemplate extends ConsumerWidget {
   final bool isScrollable;
   final bool showDrawer;
   final Widget? actionsContentOverride;
+  final Future<void> Function()? onRefresh; // Callback for pull-to-refresh
 
   const GenericTemplate({
     super.key,
@@ -29,6 +31,7 @@ class GenericTemplate extends ConsumerWidget {
     this.isScrollable = true,
     this.showDrawer = false,
     this.actionsContentOverride,
+    this.onRefresh,
   });
 
   @override
@@ -39,8 +42,72 @@ class GenericTemplate extends ConsumerWidget {
     );
 
     Widget outerContent = SingleChildScrollView(
-      child: innerContent,
+      physics: const AlwaysScrollableScrollPhysics(), // Ensure pull-to-refresh works
+      child: Column(
+        children: [
+          innerContent,
+          if ((actions ?? []).isNotEmpty) _buildActions(context),
+        ],
+      ),
     );
+
+    // Body content with loading state
+    Widget bodyContent = SafeArea(
+      bottom: false,
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(Dimens.radiusMedium),
+                  topRight: Radius.circular(Dimens.radiusMedium),
+                ),
+              ),
+              child: isLoading
+                  ? const Center(
+                      key: ValueKey(true),
+                      child: CircularProgressIndicator(),
+                    )
+                  : ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(Dimens.radiusMedium),
+                        topRight: Radius.circular(Dimens.radiusMedium),
+                      ),
+                      child: isScrollable
+                          ? outerContent
+                          : CustomScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              slivers: [
+                                SliverFillRemaining(
+                                  hasScrollBody: false,
+                                  child: Column(
+                                    children: [
+                                      Expanded(child: innerContent),
+                                      if ((actions ?? []).isNotEmpty)
+                                        _buildActions(context),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // Wrap entire body with RefreshIndicator if onRefresh is provided
+    Widget scaffoldBody = onRefresh != null
+        ? RefreshIndicator(
+            onRefresh: onRefresh!,
+            color: ThemeColors.orangeColor,
+            backgroundColor: ThemeColors.whiteColor,
+            child: bodyContent,
+          )
+        : bodyContent;
 
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -60,44 +127,7 @@ class GenericTemplate extends ConsumerWidget {
         actionsContentOverride: actionsContentOverride,
       ),
       backgroundColor: backgroundColor,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(Dimens.radiusMedium),
-                    topRight: Radius.circular(Dimens.radiusMedium),
-                  ),
-                ),
-                child: isLoading
-                    ? const Center(
-                        key: ValueKey(true),
-                        child: CircularProgressIndicator(),
-                      )
-                    : ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(Dimens.radiusMedium),
-                          topRight: Radius.circular(Dimens.radiusMedium),
-                        ),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: isScrollable ? outerContent : innerContent,
-                            ),
-                            if ((actions ?? []).isNotEmpty)
-                              _buildActions(context),
-                          ],
-                        ),
-                      ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: scaffoldBody,
       drawer: showDrawer
           ? ClipRRect(
               borderRadius: const BorderRadius.only(
@@ -131,7 +161,8 @@ class GenericTemplate extends ConsumerWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        if(GoRouterState.of(context).matchedLocation != AfriflexRoutes.homeRoute) {
+                        if (GoRouterState.of(context).matchedLocation !=
+                            AfriflexRoutes.homeRoute) {
                           context.pushNamed(AfriflexRoutes.homeRoute);
                         }
                       },
@@ -149,7 +180,8 @@ class GenericTemplate extends ConsumerWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        if(GoRouterState.of(context).matchedLocation != AfriflexRoutes.digitalTontineRoute) {
+                        if (GoRouterState.of(context).matchedLocation !=
+                            AfriflexRoutes.digitalTontineRoute) {
                           context.pushNamed(AfriflexRoutes.digitalTontineRoute);
                         }
                       },
@@ -178,9 +210,7 @@ class GenericTemplate extends ConsumerWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        context.pushNamed(
-                          AfriflexRoutes.sendMoneyRoute,
-                        );
+                        context.pushNamed(AfriflexRoutes.sendMoneyRoute);
                       },
                       child: const Row(
                         spacing: 12,
@@ -194,9 +224,7 @@ class GenericTemplate extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 300,
-                    ),
+                    const SizedBox(height: 300),
                     const Row(
                       spacing: 12,
                       children: [

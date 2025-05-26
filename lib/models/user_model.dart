@@ -20,7 +20,7 @@ class User {
   final DateTime? resetAllowedUntil;
   final int? loginFailureCount;
   final String activationCode;
-  final dynamic signature;
+  // final dynamic signature;
   final bool accountExpired;
   final bool credentialsExpired;
   final bool accountEnabled;
@@ -46,7 +46,7 @@ class User {
     this.resetAllowedUntil,
     this.loginFailureCount,
     required this.activationCode,
-    this.signature,
+    // this.signature,
     required this.accountExpired,
     required this.credentialsExpired,
     required this.accountEnabled,
@@ -82,7 +82,7 @@ class User {
           : null,
       loginFailureCount: json['loginFailureCount'] as int?,
       activationCode: json['activationCode'] as String,
-      signature: json['signature'] as String?,
+      // signature: json['signature'] as String?,
       accountExpired: json['accountExpired'] as bool,
       credentialsExpired: json['credentialsExpired'] as bool,
       accountEnabled: json['accountEnabled'] as bool,
@@ -111,7 +111,7 @@ class User {
       'resetAllowedUntil': resetAllowedUntil?.toIso8601String(),
       'loginFailureCount': loginFailureCount,
       'activationCode': activationCode,
-      'signature': signature,
+      // 'signature': signature,
       'accountExpired': accountExpired,
       'credentialsExpired': credentialsExpired,
       'accountEnabled': accountEnabled,

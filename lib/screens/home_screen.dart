@@ -1,5 +1,8 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/helpers/formatting_helper.dart';
+import 'package:afriflex/providers/account_provider.dart';
 import 'package:afriflex/providers/auth_provider.dart';
+import 'package:afriflex/providers/contacts_provider.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
@@ -15,18 +18,32 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  bool _isAmountVisible = true;
+
+  void _toggleAmountVisibility() {
+    setState(() {
+      _isAmountVisible = !_isAmountVisible;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final userAccounts = ref.watch(userAccountsProvider(()));
+    final userContacts = ref.watch(userContactsProvider(()));
     
     return GenericTemplate(
+      onRefresh: () async {
+        ref.invalidate(userContactsProvider);
+        ref.invalidate(userAccountsProvider);
+      },
       isScrollable: true,
       title: '',
       actionsContentOverride: Image.asset(
         'assets/images/home_page/profile.png',
       ),
       content: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Dimens.marginBig),
+        padding: const EdgeInsets.symmetric(horizontal: Dimens.marginMedium),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,38 +72,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       color: ThemeColors.grayLight,
                       borderRadius: BorderRadius.circular(48),
                     ),
-                    child: const Column(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 8,
                       children: [
                         Row(
                           spacing: 8,
                           children: [
-                            Text(
+                            const Text(
                               'Balance',
                               style: TextStyle(
                                   fontSize: 18, color: Colors.black54),
                             ),
-                            Icon(
-                              Icons.visibility_off,
-                              color: Colors.black54,
-                              size: 18,
+                            InkWell(
+                              onTap: _toggleAmountVisibility,
+                              child: Icon(
+                                _isAmountVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.black54,
+                                size: 18,
+                              ),
                             ),
                           ],
                         ),
-                        Text(
-                          'XAF 12,000',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                        userAccounts.when(
+                          data: (accounts) => ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: accounts.length,
+                            itemBuilder: (context, index) {
+                              final account = accounts[index];
+                              return SizedBox(
+                                width: 140,
+                                child: Text(
+                                  _isAmountVisible
+                                      ? '${account.currencyCode} ${formatNumberWithSuffix(account.balance, max: 10000, decimalPlaces: 2)}'
+                                      : '${account.currencyCode} ----',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              );
+                            },
                           ),
+                          loading: () => const Center(child: CircularProgressIndicator()),
+                          error: (error, stack) => const Text(''),
                         ),
                       ],
                     ),
                   ),
                   Positioned(
-                    right: -20, // Adjust overlap
+                    right: -8,
                     bottom: 10,
                     child: Card(
                       elevation: 5,
@@ -94,119 +135,87 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Container(
-                        width: 165,
+                        width: MediaQuery.of(context).size.width * 0.45, // Dynamic width
                         height: 125,
+                        clipBehavior: Clip.none,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [
-                              ThemeColors.blackColor,
-                              ThemeColors.orangeColor
-                            ],
+                            colors: [ThemeColors.blackColor, ThemeColors.orangeColor],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                           ),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'PMG Pay',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(fontSize: 14),
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 14),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'PREMIUM ACCOUNT',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                       fontSize: 8,
                                       color: Colors.white70,
                                     ),
                               ),
                               const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '5789 **** **** 2847',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(
-                                          fontSize: 8,
-                                        ),
-                                  ),
-                                ],
+                              Text(
+                                '5789 **** **** 2847',
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontSize: 8,
+                                    ),
                               ),
                               const SizedBox(height: 6),
                               Row(
-                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Card holder',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              fontSize: 8,
-                                              color: Colors.white54,
-                                            ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.2,
-                                        child: Text(
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Card holder',
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                fontSize: 8,
+                                                color: Colors.white54,
+                                              ),
+                                        ),
+                                        Text(
                                           'Jacques Kagabo',
                                           overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'Expire date',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              fontSize: 8,
-                                              color: Colors.white54,
-                                            ),
-                                      ),
-                                      Text(
-                                        '06/28',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ],
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'Expire date',
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                fontSize: 8,
+                                                color: Colors.white54,
+                                              ),
+                                        ),
+                                        Text(
+                                          '06/28',
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -219,26 +228,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Wrap(
+              spacing: 2, // Horizontal spacing between items
+              runSpacing: 8, // Vertical spacing between lines
+              alignment: WrapAlignment.spaceBetween,
               children: [
                 FeatureItem(
                   icon: Icons.qr_code_scanner_outlined,
                   label: 'Digital Tontine',
                   color: Colors.orange,
-                  onPressed: () => context.pushNamed(
-                    AfriflexRoutes.digitalTontineRoute,
-                  ),
+                  onPressed: () => context.pushNamed(AfriflexRoutes.digitalTontineRoute),
                 ),
                 FeatureItem(
                   icon: Icons.send_to_mobile_outlined,
                   label: 'Send Money',
                   color: Colors.orange,
-                  onPressed: () {
-                    context.pushNamed(
-                      AfriflexRoutes.sendMoneyRoute,
-                    );
-                  },
+                  onPressed: () => context.pushNamed(AfriflexRoutes.sendMoneyRoute),
                 ),
                 const FeatureItem(
                   icon: Icons.account_balance_wallet_outlined,
@@ -254,19 +259,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
             const SectionHeader(title: "Send money"),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.11,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                children: const <Widget>[
-                  ContactItem(initials: "JM", name: "Jhon"),
-                  ContactItem(initials: "AN", name: "Ann"),
-                  ContactItem(initials: "MT", name: "Mike"),
-                  ContactItem(initials: "MI", name: "Mia"),
-                  ContactItem(initials: "MI", name: "Mia"),
-                ],
-              ),
+            userContacts.when(
+              data: (contacts) {
+                if (contacts.isEmpty) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(
+                        "No contacts available",
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.13,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: contacts.length,
+                    itemBuilder: (context, index) {
+                      final contact = contacts[index];
+                      return ContactItem(
+                        initials: contact.contactName.substring(0, 2).toUpperCase(),
+                        name: contact.contactName,
+                      );
+                    },
+                  ),
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Text('$error', style: const TextStyle(color: Colors.red)),
             ),
             const TransactionTable(),
           ],
@@ -344,7 +368,8 @@ class FeatureItem extends StatelessWidget {
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w400,
                   ),
-              overflow: TextOverflow.visible,
+              overflow: TextOverflow.ellipsis, // Changed from TextOverflow.visible
+              maxLines: 2,
             ),
           ],
         ),
@@ -382,6 +407,8 @@ class ContactItem extends StatelessWidget {
           Text(
             name,
             style: const TextStyle(fontSize: 12, color: Colors.black),
+            overflow: TextOverflow.ellipsis, // Changed from TextOverflow.visible
+            maxLines: 2, // Ensures the text does not overflow
           ),
         ],
       ),
@@ -439,9 +466,10 @@ class TransactionItem extends StatelessWidget {
               Text(
                 amount,
                 style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
               ),
             ],
           ),
