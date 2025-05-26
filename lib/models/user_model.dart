@@ -1,6 +1,7 @@
+import 'package:afriflex/models/dto/common_dto.dart';
 import 'package:afriflex/models/role_model.dart';
 
-class User {
+class User extends Serializable {
   final String id;
   final String emailAddress;
   final String phoneNumber;
@@ -52,7 +53,7 @@ class User {
     required this.accountEnabled,
     required this.accountLocked,
   });
-
+  
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as String,
@@ -90,6 +91,12 @@ class User {
     );
   }
 
+  @override
+  User fromJson(Map<String, dynamic> json) {
+    return User.fromJson(json);
+  }
+
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,

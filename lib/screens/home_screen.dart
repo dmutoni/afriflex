@@ -3,6 +3,7 @@ import 'package:afriflex/helpers/formatting_helper.dart';
 import 'package:afriflex/providers/account_provider.dart';
 import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/providers/contacts_provider.dart';
+import 'package:afriflex/providers/transactions_provider.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
@@ -19,6 +20,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isAmountVisible = true;
+  String? _selectedAccountNumber;
 
   void _toggleAmountVisibility() {
     setState(() {
@@ -31,7 +33,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final authState = ref.watch(authProvider);
     final userAccounts = ref.watch(userAccountsProvider(()));
     final userContacts = ref.watch(userContactsProvider(()));
-    
+    final userIncomingTransactions = ref.watch(filterTransactionsProvider((
+      page: 1,
+      limit: 5,
+      areIncomingTransactions: true,
+      accountNumber: _selectedAccountNumber,
+      category: null,
+      transactionType: null,
+      status: null,
+      startDate: null,
+      endDate: null,
+    )));
+    final userOutGoingTransactions = ref.watch(filterTransactionsProvider((
+      page: 1,
+      limit: 5,
+      areIncomingTransactions: false,
+      accountNumber: _selectedAccountNumber,
+      category: null,
+      transactionType: null,
+      status: null,
+      startDate: null,
+      endDate: null,
+    )));
+
     return GenericTemplate(
       onRefresh: () async {
         ref.invalidate(userContactsProvider);
@@ -103,6 +127,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             itemCount: accounts.length,
                             itemBuilder: (context, index) {
                               final account = accounts[index];
+                              _selectedAccountNumber ??= account.accountNumber;
                               return SizedBox(
                                 width: 140,
                                 child: Text(
