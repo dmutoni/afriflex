@@ -20,7 +20,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   bool _isAmountVisible = true;
-  String? _selectedAccountNumber;
 
   void _toggleAmountVisibility() {
     setState(() {
@@ -33,28 +32,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final authState = ref.watch(authProvider);
     final userAccounts = ref.watch(userAccountsProvider(()));
     final userContacts = ref.watch(userContactsProvider(()));
-    final userIncomingTransactions = ref.watch(filterTransactionsProvider((
-      page: 1,
-      limit: 5,
-      areIncomingTransactions: true,
-      accountNumber: _selectedAccountNumber,
-      category: null,
-      transactionType: null,
-      status: null,
-      startDate: null,
-      endDate: null,
-    )));
-    final userOutGoingTransactions = ref.watch(filterTransactionsProvider((
-      page: 1,
-      limit: 5,
-      areIncomingTransactions: false,
-      accountNumber: _selectedAccountNumber,
-      category: null,
-      transactionType: null,
-      status: null,
-      startDate: null,
-      endDate: null,
-    )));
 
     return GenericTemplate(
       onRefresh: () async {
@@ -127,7 +104,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             itemCount: accounts.length,
                             itemBuilder: (context, index) {
                               final account = accounts[index];
-                              _selectedAccountNumber ??= account.accountNumber;
                               return SizedBox(
                                 width: 140,
                                 child: Text(
@@ -504,35 +480,161 @@ class TransactionItem extends StatelessWidget {
   }
 }
 
-class TransactionTable extends StatelessWidget {
+class TransactionTable extends ConsumerStatefulWidget {
   const TransactionTable({super.key});
 
   @override
+  ConsumerState<TransactionTable> createState() => _TransactionTableState();
+}
+
+class _TransactionTableState extends ConsumerState<TransactionTable> {
+  String? _selectedAccountNumber;
+
+  @override
   Widget build(BuildContext context) {
-    return const Column(
+    final accountsAsync = ref.watch(userAccountsProvider(()));
+    final incomingTransactionsAsync = ref.watch(filterTransactionsProvider((
+      page: 1,
+      limit: 5,
+      areIncomingTransactions: true,
+      accountNumber: _selectedAccountNumber,
+      category: null,
+      transactionType: null,
+      status: null,
+      startDate: null,
+      endDate: null,
+    )));
+    final outgoingTransactionsAsync = ref.watch(filterTransactionsProvider((
+      page: 1,
+      limit: 5,
+      areIncomingTransactions: false,
+      accountNumber: _selectedAccountNumber,
+      category: null,
+      transactionType: null,
+      status: null,
+      startDate: null,
+      endDate: null,
+    )));
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
       children: [
-        SectionHeader(
-          title: 'Outgoing Transactions',
+        accountsAsync.when(
+          data: (accounts) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'Select Account',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                DropdownButton<String?>(
+                  value: _selectedAccountNumber,
+                  hint: const Text(''),
+                  isExpanded: true,
+                  items: accounts.map((account) {
+                    return DropdownMenuItem<String?>(
+                      value: account.accountNumber,
+                      child: Text(account.accountNumber),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedAccountNumber = value;
+                    });
+                  },
+                ),
+              ],
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (error, stack) => Center(
+            child: Column(
+              children: [
+                Text('Error loading accounts: $error'),
+                TextButton(
+                  onPressed: () => ref.invalidate(userAccountsProvider),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
         ),
-        TransactionSection(
-          columns: ["Receiver", "Type", "Date", "Amount"],
-          rows: [
-            ["Ikimina", "Tontine", "13 May", "XAF75.67"],
-            ["Jhon", "Transfer", "19 May", "XAF15.03"],
-          ],
-        ),
-        SectionHeader(
-          title: 'Incoming Transactions',
-        ),
-        TransactionSection(
-          columns: ["Sender", "Type", "Date", "Amount"],
-          rows: [
-            ["Mia", "Transfer", "13 May", "XAF75.67"],
-            ["Jhon", "Transfer", "19 May", "XAF15.03"],
-          ],
-        ),
+        // const SectionHeader(title: 'Outgoing Transactions'),
+        // outgoingTransactionsAsync != null
+        //     ? outgoingTransactionsAsync.when(
+        //         data: (page) {
+        //           final transactions = page.content ?? [];
+        //           if (transactions.isEmpty) {
+        //             return const Center(child: Text('No outgoing transactions'));
+        //           }
+        //           return TransactionSection(
+        //             columns: const ["Receiver", "Type", "Date", "Amount"],
+        //             rows: transactions.map((t) => [
+        //               t.description,
+        //               t.transactionType.name,
+        //               t.createdAt.toIso8601String(),
+        //               formatNumberWithSuffix(
+        //                 t.amount,
+        //                 max: 1000,
+        //                 prefix: t.currencyCode,
+        //                 decimalPlaces: 2,
+        //               ),
+        //             ]).toList(),
+        //           );
+        //         },
+        //         loading: () => const Center(child: CircularProgressIndicator()),
+        //         error: (error, stack) => Center(
+        //           child: Column(
+        //             children: [
+        //               Text('Error: $error'),
+        //               TextButton(
+        //                 onPressed: () => ref.invalidate(filterTransactionsProvider),
+        //                 child: const Text('Retry'),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       )
+        //     : const Center(child: Text('Select an account to view transactions')),
+        // const SectionHeader(title: 'Incoming Transactions'),
+        // incomingTransactionsAsync != null
+        //     ? incomingTransactionsAsync.when(
+        //         data: (page) {
+        //           final transactions = page.content ?? [];
+        //           if (transactions.isEmpty) {
+        //             return const Center(child: Text('No incoming transactions'));
+        //           }
+        //           return TransactionSection(
+        //             columns: const ["Sender", "Type", "Date", "Amount"],
+        //             rows: transactions.map((t) => [
+        //               t.description,
+        //               t.transactionType.name,
+        //               t.createdAt.toIso8601String(),
+        //               formatNumberWithSuffix(
+        //                 t.amount,
+        //                 max: 1000,
+        //                 prefix: t.currencyCode,
+        //                 decimalPlaces: 2,
+        //               ),
+        //             ]).toList(),
+        //           );
+        //         },
+        //         loading: () => const Center(child: CircularProgressIndicator()),
+        //         error: (error, stack) => Center(
+        //           child: Column(
+        //             children: [
+        //               Text('Error: $error'),
+        //               TextButton(
+        //                 onPressed: () => ref.invalidate(filterTransactionsProvider),
+        //                 child: const Text('Retry'),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       )
+        //     : const Center(child: Text('Select an account to view transactions')),
       ],
     );
   }

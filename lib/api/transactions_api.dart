@@ -30,7 +30,7 @@ Future<Page<Transaction>> filterTransactions({
     if (startDate != null) 'startDate': startDate.toIso8601String(),
     if (endDate != null) 'endDate': endDate.toIso8601String(),
   };
-  
+
   final response = await http.get(
     buildApiUri(endpoint: '/transactions/filter', queryParameters: queryParameters),
     headers: {
@@ -41,7 +41,7 @@ Future<Page<Transaction>> filterTransactions({
 
   if (response.statusCode == 200) {
     return Page<Transaction>.fromJson(
-      jsonDecode(response.body) as Map<String, dynamic>,
+      jsonDecode(response.body)['data'] as Map<String, dynamic>,
       (json) => Transaction.fromJson(json as Map<String, dynamic>),
     );
   } else {
