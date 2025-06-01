@@ -40,6 +40,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
   Future<void> _verifyPin(BuildContext context, WidgetRef ref) async {
     final String? userEmail = ref.read(authProvider).useEmail;
     if (_pinInputValue.length == 6 && userEmail != null) {
+      setState(() {
+        _isSubmitting = true;
+      });
       try {
         await ref.read(authProvider.notifier).verifyOTP(userEmail, _pinInputValue);
         if (ref.read(authProvider.notifier).isLoggedIn() && context.mounted) {
@@ -138,12 +141,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                 textStyle: Theme.of(context).textTheme.displayMedium,
               ),
               length: 6,
-              onChanged: (String pin) {
+              onCompleted: (String pin) {
                 setState(() {
-                  if (_pinInputValue.length == 5 && pin.length == 6) {
-                    _pinInputFocusNode.unfocus();
-                  }
-                  _pinInputValue = _pinInputController.text;
+                  _pinInputValue = pin;
                 });
               },
               validator: (String? value) {
@@ -152,6 +152,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                 }
                 return null;
               },
+              autofillHints: const [AutofillHints.oneTimeCode],
+              keyboardType: TextInputType.number,
+              autofocus: true,
+              hapticFeedbackType: HapticFeedbackType.lightImpact,
               focusNode: _pinInputFocusNode,
               controller: _pinInputController,
               inputFormatters: [
@@ -174,7 +178,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
         ),
         AfriflexButton(
           title: 'Verify Code',
-          isEnabled: _pinInputValue.length == 6,
+          isEnabled: _pinInputValue.length == 6 && !_isSubmitting,
           isLoading: _isSubmitting,
           onTap: () => _verifyPin(context, ref),
         ),

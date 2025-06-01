@@ -1,4 +1,7 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
+import 'package:afriflex/helpers/formatting_helper.dart';
+import 'package:afriflex/providers/account_provider.dart';
+import 'package:afriflex/providers/auth_provider.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
@@ -15,13 +18,28 @@ class DigitalTontineScreen extends ConsumerStatefulWidget {
 }
 
 class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
+  bool _isAmountVisible = true;
+
+  void _toggleAmountVisibility() {
+    setState(() {
+      _isAmountVisible = !_isAmountVisible;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final userAccounts = ref.watch(userAccountsProvider);
+    
     return GenericTemplate(
       title: '',
-      actionsContentOverride: Image.asset(
-        ''
-        'assets/images/home_page/profile.png',
+      actionsContentOverride: CircleAvatar(
+        radius: 32,
+        backgroundColor: Colors.grey.shade300,
+        child: Text(
+          authState.user?.firstName.substring(0, 2).toUpperCase() ?? '',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
       ),
       showDrawer: true,
       isScrollable: true,
@@ -40,32 +58,52 @@ class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
                 color: ThemeColors.grayLight,
                 borderRadius: BorderRadius.circular(48),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 8,
                 children: [
                   Row(
                     spacing: 8,
                     children: [
-                      Text(
+                      const Text(
                         'Balance',
                         style: TextStyle(fontSize: 18, color: Colors.black54),
                       ),
-                      Icon(
-                        Icons.visibility_off,
-                        color: Colors.black54,
-                        size: 18,
+                      InkWell(
+                        onTap: _toggleAmountVisibility,
+                        child: Icon(
+                          _isAmountVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.black54,
+                          size: 18,
+                        ),
                       ),
                     ],
                   ),
-                  Text(
-                    'XAF 12,000',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
+                  ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: userAccounts.accounts.length,
+                          itemBuilder: (context, index) {
+                            final account = userAccounts.accounts[index];
+                            return SizedBox(
+                              width: 140,
+                              child: Text(
+                                _isAmountVisible
+                                    ? '${account.currencyCode} ${formatNumberWithSuffix(account.balance, max: 10000, decimalPlaces: 1)}'
+                                    : '${account.currencyCode} ----',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            );
+                          },
+                        ),
                 ],
               ),
             ),
@@ -100,7 +138,7 @@ class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
             ),
             const SectionHeader(title: "Active tontine"),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.11,
+              height: MediaQuery.of(context).size.height * 0.14,
               child: ListView(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,

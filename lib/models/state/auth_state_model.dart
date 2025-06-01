@@ -40,4 +40,16 @@ class AuthState {
       otpIntent: otpIntent ?? this.otpIntent,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'accessToken': accessToken,
+    'tokenType': tokenType,
+    'refreshToken': refreshToken,
+  };
+
+  factory AuthState.fromJson(Map<String, dynamic> json) => AuthState(
+    accessToken: json['accessToken'] as String?,
+    tokenType: json['tokenType'] as String?,
+    refreshToken: json['refreshToken'] as String?,
+  );
 }

@@ -1,31 +1,29 @@
 import 'package:afriflex/api/transactions_api.dart';
 import 'package:afriflex/models/dto/common_dto.dart';
-import 'package:afriflex/models/enums/transaction_enum.dart';
 import 'package:afriflex/models/transaction_model.dart';
 import 'package:afriflex/providers/auth_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final filterTransactionsProvider = FutureProvider.family<Page<Transaction>, ({
-  int page,
-  int limit,
-  ETransactionCategory? category,
-  ETransactionType? transactionType,
-  ETransactionStatus? status,
-  String? accountNumber,
-  bool? areIncomingTransactions,
-  DateTime? startDate,
-  DateTime? endDate,
+final homeIncomingTransactionsProvider = FutureProvider.family<Page<Transaction>, ({
+  String? accountNumber
 })>((ref, params) async {
   return await filterTransactions(
-    category: params.category,
-    transactionType: params.transactionType,
-    status: params.status,
     accountNumber: params.accountNumber,
-    startDate: params.startDate,
-    endDate: params.endDate,
-    areIncomingTransactions: params.areIncomingTransactions,
+    areIncomingTransactions: true,
     accessToken: ref.read(authProvider).accessToken ?? '',
-    page: params.page,
-    limit: params.limit,
+    page: 1,
+    limit: 5,
+  );
+});
+
+final homeOutgoingTransactionsProvider = FutureProvider.family<Page<Transaction>, ({
+  String accountNumber
+})>((ref, params) async {
+  return await filterTransactions(
+    accountNumber: params.accountNumber,
+    areIncomingTransactions: false,
+    accessToken: ref.read(authProvider).accessToken ?? '',
+    page: 1,
+    limit: 5,
   );
 });

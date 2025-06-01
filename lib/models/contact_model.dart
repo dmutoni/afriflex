@@ -1,7 +1,8 @@
 import 'package:afriflex/models/account_model.dart';
+import 'package:afriflex/models/dto/common_dto.dart';
 import 'package:afriflex/models/user_model.dart';
 
-class Contact {
+class Contact extends Serializable {
   final String id;
   final String contactName;
   final String phoneNumber;
@@ -27,5 +28,22 @@ class Contact {
       account: Account.fromJson(json['account'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
+  }
+
+  @override
+  Contact fromJson(Map<String, dynamic> json) {
+    return Contact.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'contactName': contactName,
+      'phoneNumber': phoneNumber,
+      'user': user.toJson(),
+      'account': account.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+    };
   }
 }

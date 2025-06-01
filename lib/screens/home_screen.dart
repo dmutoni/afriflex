@@ -10,6 +10,7 @@ import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -30,18 +31,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final userAccounts = ref.watch(userAccountsProvider(()));
-    final userContacts = ref.watch(userContactsProvider(()));
+    final userAccounts = ref.watch(userAccountsProvider);
+    final userContacts = ref.watch(userContactsProvider);
 
     return GenericTemplate(
       onRefresh: () async {
-        ref.invalidate(userContactsProvider);
-        ref.invalidate(userAccountsProvider);
+        ref.read(userContactsProvider.notifier).fetchUserContacts();
+        ref.read(userAccountsProvider.notifier).fetchUserAccounts();
+        ref.invalidate(homeIncomingTransactionsProvider);
+        ref.invalidate(homeOutgoingTransactionsProvider);
       },
       isScrollable: true,
       title: '',
-      actionsContentOverride: Image.asset(
-        'assets/images/home_page/profile.png',
+      actionsContentOverride: CircleAvatar(
+        radius: 32,
+        backgroundColor: Colors.grey.shade300,
+        child: Text(
+          authState.user?.firstName.substring(0, 2).toUpperCase() ?? '',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
       ),
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dimens.marginMedium),
@@ -97,32 +105,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                           ],
                         ),
-                        userAccounts.when(
-                          data: (accounts) => ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: accounts.length,
-                            itemBuilder: (context, index) {
-                              final account = accounts[index];
-                              return SizedBox(
-                                width: 140,
-                                child: Text(
-                                  _isAmountVisible
-                                      ? '${account.currencyCode} ${formatNumberWithSuffix(account.balance, max: 10000, decimalPlaces: 2)}'
-                                      : '${account.currencyCode} ----',
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: userAccounts.accounts.length,
+                          itemBuilder: (context, index) {
+                            final account = userAccounts.accounts[index];
+                            return SizedBox(
+                              width: 140,
+                              child: Text(
+                                _isAmountVisible
+                                    ? '${account.currencyCode} ${formatNumberWithSuffix(account.balance, max: 10000, decimalPlaces: 1)}'
+                                    : '${account.currencyCode} ----',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
                                 ),
-                              );
-                            },
-                          ),
-                          loading: () => const Center(child: CircularProgressIndicator()),
-                          error: (error, stack) => const Text(''),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -260,39 +264,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
             const SectionHeader(title: "Send money"),
-            userContacts.when(
-              data: (contacts) {
-                if (contacts.isEmpty) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text(
-                        "No contacts available",
-                        style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
-                      ),
+            userContacts.contacts.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
+                    child: Text(
+                      "No contacts available",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontStyle: FontStyle.italic,
+                            color: Colors.grey,
+                          ),
                     ),
-                  );
-                }
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.13,
+                  )
+                : SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.14,
+                  width: double.infinity,
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: contacts.length,
+                    physics: const ScrollPhysics(),
+                    itemCount: userContacts.contacts.length > 8 ? 8 : userContacts.contacts.length,
                     itemBuilder: (context, index) {
-                      final contact = contacts[index];
+                      final contact = userContacts.contacts[index];
                       return ContactItem(
                         initials: contact.contactName.substring(0, 2).toUpperCase(),
                         name: contact.contactName,
                       );
                     },
                   ),
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Text('$error', style: const TextStyle(color: Colors.red)),
-            ),
+                ),
             const TransactionTable(),
           ],
         ),
@@ -488,153 +487,102 @@ class TransactionTable extends ConsumerStatefulWidget {
 }
 
 class _TransactionTableState extends ConsumerState<TransactionTable> {
-  String? _selectedAccountNumber;
 
   @override
   Widget build(BuildContext context) {
-    // final accountsAsync = ref.watch(userAccountsProvider(()));
-    // final incomingTransactionsAsync = ref.watch(filterTransactionsProvider((
-    //   page: 1,
-    //   limit: 5,
-    //   areIncomingTransactions: true,
-    //   accountNumber: _selectedAccountNumber,
-    //   category: null,
-    //   transactionType: null,
-    //   status: null,
-    //   startDate: null,
-    //   endDate: null,
-    // )));
-    // final outgoingTransactionsAsync = ref.watch(filterTransactionsProvider((
-    //   page: 1,
-    //   limit: 5,
-    //   areIncomingTransactions: false,
-    //   accountNumber: _selectedAccountNumber,
-    //   category: null,
-    //   transactionType: null,
-    //   status: null,
-    //   startDate: null,
-    //   endDate: null,
-    // )));
+    final accountsState = ref.watch(userAccountsProvider);
 
-    return const Column(
+    final incomingTransactions = accountsState.accounts.isNotEmpty
+      ? ref.watch(homeIncomingTransactionsProvider((
+          accountNumber: accountsState.accounts.first.accountNumber,
+        ))) : null;
+
+    final outgoingTransactions = accountsState.accounts.isNotEmpty
+      ? ref.watch(homeOutgoingTransactionsProvider((
+          accountNumber: accountsState.accounts.first.accountNumber,
+        ))) : null;
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // accountsAsync.when(
-        //   data: (accounts) {
-        //     return Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       crossAxisAlignment: CrossAxisAlignment.center,
-        //       children: [
-        //         const Text(
-        //           'Select Account',
-        //           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        //         ),
-        //         DropdownButton<String?>(
-        //           value: _selectedAccountNumber,
-        //           hint: const Text(''),
-        //           isExpanded: true,
-        //           items: accounts.map((account) {
-        //             return DropdownMenuItem<String?>(
-        //               value: account.accountNumber,
-        //               child: Text(account.accountNumber),
-        //             );
-        //           }).toList(),
-        //           onChanged: (value) {
-        //             setState(() {
-        //               _selectedAccountNumber = value;
-        //             });
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        //   loading: () => const SizedBox.shrink(),
-        //   error: (error, stack) => Center(
-        //     child: Column(
-        //       children: [
-        //         Text('Error loading accounts: $error'),
-        //         TextButton(
-        //           onPressed: () => ref.invalidate(userAccountsProvider),
-        //           child: const Text('Retry'),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // ),
-        // const SectionHeader(title: 'Outgoing Transactions'),
-        // outgoingTransactionsAsync != null
-        //     ? outgoingTransactionsAsync.when(
-        //         data: (page) {
-        //           final transactions = page.content ?? [];
-        //           if (transactions.isEmpty) {
-        //             return const Center(child: Text('No outgoing transactions'));
-        //           }
-        //           return TransactionSection(
-        //             columns: const ["Receiver", "Type", "Date", "Amount"],
-        //             rows: transactions.map((t) => [
-        //               t.description,
-        //               t.transactionType.name,
-        //               t.createdAt.toIso8601String(),
-        //               formatNumberWithSuffix(
-        //                 t.amount,
-        //                 max: 1000,
-        //                 prefix: t.currencyCode,
-        //                 decimalPlaces: 2,
-        //               ),
-        //             ]).toList(),
-        //           );
-        //         },
-        //         loading: () => const Center(child: CircularProgressIndicator()),
-        //         error: (error, stack) => Center(
-        //           child: Column(
-        //             children: [
-        //               Text('Error: $error'),
-        //               TextButton(
-        //                 onPressed: () => ref.invalidate(filterTransactionsProvider),
-        //                 child: const Text('Retry'),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       )
-        //     : const Center(child: Text('Select an account to view transactions')),
-        // const SectionHeader(title: 'Incoming Transactions'),
-        // incomingTransactionsAsync != null
-        //     ? incomingTransactionsAsync.when(
-        //         data: (page) {
-        //           final transactions = page.content ?? [];
-        //           if (transactions.isEmpty) {
-        //             return const Center(child: Text('No incoming transactions'));
-        //           }
-        //           return TransactionSection(
-        //             columns: const ["Sender", "Type", "Date", "Amount"],
-        //             rows: transactions.map((t) => [
-        //               t.description,
-        //               t.transactionType.name,
-        //               t.createdAt.toIso8601String(),
-        //               formatNumberWithSuffix(
-        //                 t.amount,
-        //                 max: 1000,
-        //                 prefix: t.currencyCode,
-        //                 decimalPlaces: 2,
-        //               ),
-        //             ]).toList(),
-        //           );
-        //         },
-        //         loading: () => const Center(child: CircularProgressIndicator()),
-        //         error: (error, stack) => Center(
-        //           child: Column(
-        //             children: [
-        //               Text('Error: $error'),
-        //               TextButton(
-        //                 onPressed: () => ref.invalidate(filterTransactionsProvider),
-        //                 child: const Text('Retry'),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       )
-        //     : const Center(child: Text('Select an account to view transactions')),
+        const SectionHeader(title: 'Outgoing Transactions'),
+        outgoingTransactions != null
+            ? outgoingTransactions.when(
+                data: (page) {
+                  final transactions = page.content ?? [];
+                  return TransactionSection(
+                    columns: const ["Receiver", "Type", "Date", "Amount"],
+                    rows: transactions.map((t) => [
+                      t.receiverAccount.accountName ?? t.receiverAccount.accountNumber,
+                      t.transactionType.name,
+                      DateFormat('dd MMM yyyy').format(t.createdAt),
+                      formatNumberWithSuffix(
+                        t.amount,
+                        max: 1000,
+                        prefix: t.currencyCode,
+                        decimalPlaces: 2,
+                      ),
+                    ]).toList(),
+                  );
+                },
+                loading: () => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
+                  child: Text(
+                    "No transactions available",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey,
+                        ),
+                  ),
+                ),
+                error: (error, stack) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
+                  child: TextButton(
+                    onPressed: () => ref.invalidate(homeOutgoingTransactionsProvider),
+                    child: const Text('Retry'),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+        const SectionHeader(title: 'Incoming Transactions'),
+        incomingTransactions != null
+            ? incomingTransactions.when(
+                data: (page) {
+                  final transactions = page.content ?? [];
+                  return TransactionSection(
+                    columns: const ["Sender", "Type", "Date", "Amount"],
+                    rows: transactions.map((t) => [
+                      '${t.senderAccount.user?.firstName} ${t.senderAccount.user?.lastName}',
+                      t.transactionType.name,
+                      DateFormat('dd MMM yyyy').format(t.createdAt),
+                      formatNumberWithSuffix(
+                        t.amount,
+                        max: 1000,
+                        prefix: t.currencyCode,
+                        decimalPlaces: 2,
+                      ),
+                    ]).toList(),
+                  );
+                },
+                loading: () => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
+                  child: Text(
+                    "No transactions available",
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey,
+                        ),
+                  ),
+                ),
+                error: (error, stack) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
+                  child: TextButton(
+                    onPressed: () => ref.invalidate(homeIncomingTransactionsProvider),
+                    child: const Text('Retry'),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -656,16 +604,14 @@ class TransactionSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (rows.isEmpty)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Text(
-                "No transactions available",
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.grey,
-                    ),
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
+            child: Text(
+              "No transactions available",
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontStyle: FontStyle.italic,
+                    color: Colors.grey,
+                  ),
             ),
           )
         else

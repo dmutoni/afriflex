@@ -7,19 +7,19 @@ import 'package:afriflex/models/transaction_model.dart';
 import 'package:http/http.dart' as http;
 
 Future<Page<Transaction>> filterTransactions({
-  required ETransactionCategory? category,
-  required ETransactionType? transactionType,
-  required ETransactionStatus? status,
+  required String accessToken,
+  required int page,
+  required int limit,
+  ETransactionCategory? category,
+  ETransactionType? transactionType,
+  ETransactionStatus? status,
   bool? areIncomingTransactions,
   String? accountNumber,
   String? userId,
   DateTime? startDate,
   DateTime? endDate,
-  required String accessToken,
-  required int page,
-  required int limit,
 }) async {
-  final queryParameters = <String, String>{
+  final queryParameters = <String, dynamic> {
     'page': page.toString(),
     'limit': limit.toString(),
     if (category != null) 'category': category.name,
@@ -38,6 +38,13 @@ Future<Page<Transaction>> filterTransactions({
       'Authorization': 'Bearer $accessToken',
     },
   );
+
+  // print('===================HERE3===================');
+  // print('Response status: ${response.statusCode}');
+  // print('Response body: ${response.body}');
+  // print('ResBody JSON : ${jsonDecode(response.body)}');
+  // print('Resbody Data JSON: ${jsonDecode(response.body)['data']}');
+  // print('===================HERE3===================');
 
   if (response.statusCode == 200) {
     return Page<Transaction>.fromJson(

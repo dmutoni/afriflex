@@ -131,8 +131,8 @@ class GenericTemplate extends ConsumerWidget {
       drawer: showDrawer
           ? ClipRRect(
               borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(70),
-                bottomRight: Radius.circular(70),
+                topRight: Radius.circular(0),
+                bottomRight: Radius.circular(0),
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.7,

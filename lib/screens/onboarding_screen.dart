@@ -89,9 +89,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 fit: BoxFit.fitWidth,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 35),
             const OnboardingTontineCarousel(),
-            const SizedBox(height: 70),
+            const SizedBox(height: 45),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: Dimens.marginDefault,

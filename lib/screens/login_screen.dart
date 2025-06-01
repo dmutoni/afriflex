@@ -31,9 +31,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isShowingPassword = true;
+  bool _isSubmitting = false;
 
   void _handleSignIn(BuildContext context, WidgetRef ref) async {
     if (_formKey.currentState?.validate() ?? false) {
+      setState(() {
+        _isSubmitting = true;
+      });
       try {
         await ref.read(authProvider.notifier).signIn(
           SignInReqBodyDto(
@@ -55,6 +59,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             context: context,
           );
         }
+      } finally {
+        setState(() {
+          _isSubmitting = false;
+        });
       }
     }
   }
@@ -100,6 +108,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 label: 'Email address',
                 isRequired: true,
                 validateOnInput: true,
+                keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Email is required';
@@ -115,6 +124,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 label: 'Password',
                 isRequired: true,
                 obscureText: !_isShowingPassword,
+                keyboardType: TextInputType.visiblePassword,
                 validateOnInput: true,
                 trailingWidgetOverride: IconButton(
                   onPressed: () => setState(
@@ -149,6 +159,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               AfriflexButton(
                 title: 'LOGIN',
                 // isEnabled: _formKey.currentState?.validate() ?? false,
+                isLoading: _isSubmitting,
                 onTap: () => _handleSignIn(context, ref),
               ),
               const AfriflexOrWidget(),

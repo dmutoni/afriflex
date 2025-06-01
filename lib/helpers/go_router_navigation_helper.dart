@@ -42,10 +42,23 @@ final routerProvider = Provider<GoRouter>((ref) {
     debugLogDiagnostics: true,
     routes: buildRoutes(),
     errorBuilder: (context, state) => const ErrorScreen(),
-    redirect: (context, state) {
+    redirect: (context, state) async {
       // Access the auth state
       final authState = ref.read(authProvider);
+      final authNotifier = ref.read(authProvider.notifier);
       final isLoggedIn = authState.accessToken != null && authState.accessToken!.isNotEmpty;
+
+      if (isLoggedIn && !authNotifier.isUserLoaded()) {
+        try {
+          await authNotifier.fetchCurrentUser().timeout(
+            const Duration(seconds: 30),
+            onTimeout: () => throw Exception('Auth fetch timed out'),
+          );
+        } catch (e) {
+          authNotifier.signOut();
+          return AfriflexRoutes.loginRoute;
+        }
+      }
 
       // Get the current route
       final currentRoute = state.matchedLocation;

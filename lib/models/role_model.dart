@@ -1,4 +1,6 @@
-class Role {
+import 'package:afriflex/models/dto/common_dto.dart';
+
+class Role extends Serializable {
   final String id;
   final String description;
   final bool adminLevel;
@@ -26,6 +28,12 @@ class Role {
     );
   }
 
+  @override
+  Role fromJson(Map<String, dynamic> json) {
+    return Role.fromJson(json);
+  }
+
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
