@@ -20,10 +20,14 @@ class SelectFromContactsScreen extends ConsumerStatefulWidget {
 class _SelectFromContactsScreenState
     extends ConsumerState<SelectFromContactsScreen> {
   bool _permissionDenied = false;
+  String? _tontineId;
 
   @override
   void initState() {
     super.initState();
+    final state = GoRouter.of(context).state;
+    final params = state?.uri.queryParameters;
+    _tontineId = params?['tontineId'];
     _fetchContacts();
   }
 
@@ -33,6 +37,16 @@ class _SelectFromContactsScreenState
     } else {
       await FlutterContacts.getContacts();
     }
+  }
+
+  // _inviteContact
+  Future<void> _inviteContact(Contact contact) async {
+    // Here you can implement the logic to invite the contact
+    // For example, you can send an invitation via SMS or email
+    // using the contact's phone number or email address.
+    // This is just a placeholder for demonstration purposes.
+    print('Tontine ID: $_tontineId');
+    print('Inviting contact: ${contact.displayName}');
   }
 
   @override
@@ -189,7 +203,7 @@ class _SelectFromContactsScreenState
                   ),
                   Text(
                     contact.phones.isNotEmpty
-                        ? contact.phones.first.customLabel
+                        ? contact.phones.first.number
                         : 'No phone number',
                     style: const TextStyle(fontSize: 14),
                     overflow: TextOverflow.ellipsis,
@@ -202,7 +216,7 @@ class _SelectFromContactsScreenState
               height: 40,
               title: 'Invite',
               variant: AfriflexButtonVariant.light,
-              onTap: () {},
+              onTap: () => _inviteContact(contact),
             ),
           ],
         ),

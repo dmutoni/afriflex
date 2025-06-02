@@ -6,7 +6,6 @@ import 'package:afriflex/widgets/common/input/afriflex_button.dart';
 import 'package:afriflex/widgets/common/visual/afriflex_or_widget.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,6 +19,18 @@ class DigitalTontineCreationSuccessScreen extends ConsumerStatefulWidget {
 
 class _DigitalTontineCreationSuccessScreenState
     extends ConsumerState<DigitalTontineCreationSuccessScreen> {
+  String? _tontineId;
+  String? _tontineName;
+
+  @override
+  void initState() {
+    super.initState();
+    final state = GoRouter.of(context).state;
+    final params = state?.uri.queryParameters;
+    _tontineId = params?['tontineId'];
+    _tontineName = params?['tontineName'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return GenericTemplate(
@@ -47,7 +58,7 @@ class _DigitalTontineCreationSuccessScreenState
                 ),
                 child: Center(
                   child: Text(
-                    '@Ikimina 1',
+                    '$_tontineName',
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                 ),
@@ -66,6 +77,10 @@ class _DigitalTontineCreationSuccessScreenState
                 onTap: () {
                   context.pushNamed(
                     AfriflexRoutes.selectFromContactsRoute,
+                    queryParameters: {
+                      'tontineId': _tontineId,
+                      'tontineName': _tontineName,
+                    },
                   );
                 },
               ),

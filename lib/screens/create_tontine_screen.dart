@@ -50,7 +50,7 @@ class _CreateTontineScreenState extends ConsumerState<CreateTontineScreen> {
       });
 
       try {
-        await createTontine(
+        final tontine = await createTontine(
           CreateTontineDto(
             name: tontineNameController.text, 
             contributionAmount: int.tryParse(contributionAmountController.text) ?? 100, 
@@ -69,6 +69,10 @@ class _CreateTontineScreenState extends ConsumerState<CreateTontineScreen> {
           
           context.pushNamed(
             AfriflexRoutes.addMembersRoute,
+            queryParameters: {
+              'tontineId': tontine.id,
+              'tontineName': tontine.name,
+            },
           );
         }
       } catch (e) {
