@@ -44,6 +44,10 @@ class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
       ),
       showDrawer: true,
       isScrollable: true,
+      onRefresh: () async{
+        ref.invalidate(activeTontinesProvider(()));
+        ref.invalidate(userAccountsProvider);
+      },
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dimens.marginBig),
         child: Column(
@@ -53,7 +57,7 @@ class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              height: MediaQuery.of(context).size.height * 0.17,
+              height: MediaQuery.of(context).size.height * 0.18,
               width: MediaQuery.of(context).size.width * 0.8,
               decoration: BoxDecoration(
                 color: ThemeColors.grayLight,

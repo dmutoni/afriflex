@@ -224,7 +224,7 @@ class GenericTemplate extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 300),
+                    const SizedBox(height: 250),
                     const Row(
                       spacing: 12,
                       children: [

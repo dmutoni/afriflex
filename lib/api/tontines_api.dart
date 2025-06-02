@@ -50,3 +50,35 @@ Future<Tontine> createTontine(CreateTontineDto dto, String accessToken) async {
     throw Exception('Failed to create tontine');
   }
 }
+
+Future<List<String>> getTontineMembers(String tontineId, String accessToken) async {
+  final response = await http.get(
+    Uri.parse('$baseUrl/tontines/$tontineId/members'),
+    headers: {
+      ...jsonContentHeader,
+      'Authorization': 'Bearer $accessToken',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final List<dynamic> json = jsonDecode(response.body);
+    return List<String>.from(json.map((item) => item as String));
+  } else {
+    throw Exception('Failed to load tontine members');
+  }
+}
+
+Future<void> inviteMembersToTontine(String tontineId, List<String> members, String accessToken) async {
+  final response = await http.post(
+    Uri.parse('$baseUrl/tontines/$tontineId/members/invite'),
+    headers: {
+      ...jsonContentHeader,
+      'Authorization': 'Bearer $accessToken',
+    },
+    body: jsonEncode(members),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('Failed to add member to tontine');
+  }
+}

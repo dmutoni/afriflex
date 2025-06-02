@@ -68,14 +68,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 8),
             SizedBox(
               width:
-                  double.infinity, // Ensures the Stack takes full screen width
+                  double.infinity,
               child: Stack(
-                clipBehavior: Clip.none, // Allows the card to overflow outside
+                clipBehavior: Clip.none,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 32),
-                    height: MediaQuery.of(context).size.height * 0.17,
+                    height: MediaQuery.of(context).size.height * 0.18,
                     width: MediaQuery.of(context).size.width * 0.8,
                     decoration: BoxDecoration(
                       color: ThemeColors.grayLight,
@@ -133,7 +133,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   Positioned(
                     right: -8,
-                    bottom: 10,
+                    bottom: 5,
                     child: Card(
                       elevation: 5,
                       shape: RoundedRectangleBorder(
@@ -141,7 +141,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.45, // Dynamic width
-                        height: 125,
+                        height: 135,
                         clipBehavior: Clip.none,
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
