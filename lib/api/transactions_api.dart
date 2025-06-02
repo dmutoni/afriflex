@@ -39,13 +39,6 @@ Future<Page<Transaction>> filterTransactions({
     },
   );
 
-  // print('===================HERE3===================');
-  // print('Response status: ${response.statusCode}');
-  // print('Response body: ${response.body}');
-  // print('ResBody JSON : ${jsonDecode(response.body)}');
-  // print('Resbody Data JSON: ${jsonDecode(response.body)['data']}');
-  // print('===================HERE3===================');
-
   if (response.statusCode == 200) {
     return Page<Transaction>.fromJson(
       jsonDecode(response.body)['data'] as Map<String, dynamic>,

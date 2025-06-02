@@ -1,7 +1,7 @@
 import 'package:afriflex/enums/route_configurations/afriflex_routes.dart';
-import 'package:afriflex/helpers/formatting_helper.dart';
 import 'package:afriflex/providers/account_provider.dart';
 import 'package:afriflex/providers/auth_provider.dart';
+import 'package:afriflex/providers/tontines_provider.dart';
 import 'package:afriflex/values/colors.dart';
 import 'package:afriflex/values/dimens.dart';
 import 'package:afriflex/widgets/templates/generic_template.dart';
@@ -30,6 +30,7 @@ class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final userAccounts = ref.watch(userAccountsProvider);
+    final activeTontines = ref.watch(activeTontinesProvider(()));
     
     return GenericTemplate(
       title: '',
@@ -91,7 +92,7 @@ class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
                               width: 140,
                               child: Text(
                                 _isAmountVisible
-                                    ? '${account.currencyCode} ${formatNumberWithSuffix(account.balance, max: 10000, decimalPlaces: 1)}'
+                                    ? '${account.currencyCode} ${account.balance}'
                                     : '${account.currencyCode} ----',
                                 style: const TextStyle(
                                   fontSize: 24,
@@ -139,14 +140,40 @@ class _DigitalTontineScreenState extends ConsumerState<DigitalTontineScreen> {
             const SectionHeader(title: "Active tontine"),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.14,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                children: const <Widget>[
-                  ContactItem(initials: "T1", name: "Ikimina 1"),
-                  ContactItem(initials: "T2", name: "Ikimina 2"),
-                  ContactItem(initials: "T3", name: "Ikimina 3"),
-                ],
+              child: activeTontines.when(
+                data: (tontines) {
+                  if (tontines.content == null || tontines.content!.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
+                      child: Text(
+                        "No active tontines available",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: tontines.content!.length,
+                    itemBuilder: (context, index) {
+                      final tontine = tontines.content![index];
+                      return GestureDetector(
+                        onTap: () {},
+                        child: ContactItem(
+                          initials: tontine.name[0],
+                          name: tontine.name,
+                        ),
+                      );
+                    },
+                  );
+                },
+                error: (error, stack) => Center(
+                  child: Text('Error loading tontines: $error'),
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
               ),
             ),
             const TransactionTable(),
